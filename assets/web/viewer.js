@@ -2916,26 +2916,6 @@ function webViewerKeyDown(evt) {
     eventBus
   } = PDFViewerApplication;
 
-  if (cmd === 1 || cmd === 8) {
-    switch (evt.keyCode) {
-      case 83:
-        eventBus.dispatch("download", {
-          source: window
-        });
-        handled = true;
-        break;
-
-      case 79:
-        {
-          eventBus.dispatch("openfile", {
-            source: window
-          });
-          handled = true;
-        }
-        break;
-    }
-  }
-
   if (cmd === 3 || cmd === 10) {
     switch (evt.keyCode) {
       case 80:
@@ -14989,19 +14969,6 @@ function renderProgress(index, total, l10n) {
     progressPerc.textContent = msg;
   });
 }
-
-window.addEventListener("keydown", function (event) {
-  if (event.keyCode === 80 && (event.ctrlKey || event.metaKey) && !event.altKey && (!event.shiftKey || window.chrome || window.opera)) {
-    window.print();
-    event.preventDefault();
-
-    if (event.stopImmediatePropagation) {
-      event.stopImmediatePropagation();
-    } else {
-      event.stopPropagation();
-    }
-  }
-}, true);
 
 if ("onbeforeprint" in window) {
   const stopPropagationIfNeeded = function (event) {
