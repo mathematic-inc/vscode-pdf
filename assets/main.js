@@ -1,12 +1,12 @@
 /*
  * Copyright 2021 Mathematic, Inc.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -26,17 +26,25 @@ function loadConfig() {
 }
 
 /**
- * Note the viewer is already running (hence the bad default), but this runs
- * before the file is opened.
+ * Note the viewer is already running, but these options
+ * set before the file is opened because of the call stack.
  */
 window.PDFViewerApplicationOptions.set('defaultUrl', '');
 
-
 const config = loadConfig();
 
+
 window.addEventListener('webviewerloaded', async () => {
+  // Wait for viewer to fully initialize.
   await window.PDFViewerApplication.initializedPromise;
+
+  // Open the document.
   window.PDFViewerApplication.open(config.docPath);
+
+  // Assure sidebar is closed.
+  PDFViewerApplication.eventBus.on('sidebarviewchanged', () => {
+    PDFViewerApplication.pdfSidebar.close();
+  }, {once: true});
 }, {once: true});
 
 window.addEventListener('message', (event) => {
