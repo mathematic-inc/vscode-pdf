@@ -2,7 +2,7 @@
   "name": "vscode-pdf",
   "displayName": "PDF Viewer",
   "description": "Portable document format (PDF) viewer for Visual Studio Code.",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "publisher": "mathematic",
   "engines": {
     "vscode": "^1.58.1"
