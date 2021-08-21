@@ -49,7 +49,7 @@ const defaultOptions = {
     kind: OptionKind.VIEWER + OptionKind.PREFERENCE
   },
   defaultUrl: {
-    value: "compressed.tracemonkey-pldi-09.pdf",
+    value: "",
     kind: OptionKind.VIEWER
   },
   defaultZoomValue: {
@@ -118,7 +118,7 @@ const defaultOptions = {
     kind: OptionKind.VIEWER + OptionKind.PREFERENCE
   },
   sidebarViewOnLoad: {
-    value: -1,
+    value: 0,
     kind: OptionKind.VIEWER + OptionKind.PREFERENCE
   },
   scrollModeOnLoad: {
@@ -13594,7 +13594,7 @@ class BasePreferences {
         "pdfBugEnabled": false,
         "renderer": "canvas",
         "renderInteractiveForms": true,
-        "sidebarViewOnLoad": -1,
+        "sidebarViewOnLoad": 0,
         "scrollModeOnLoad": -1,
         "spreadModeOnLoad": -1,
         "textLayerMode": 1,

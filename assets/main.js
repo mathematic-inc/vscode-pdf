@@ -25,14 +25,7 @@ function loadConfig() {
   throw new Error('Could not load configuration.')
 }
 
-/**
- * Note the viewer is already running, but these options
- * set before the file is opened because of the call stack.
- */
-window.PDFViewerApplicationOptions.set('defaultUrl', '');
-
 const config = loadConfig();
-
 
 window.addEventListener('webviewerloaded', async () => {
   // Wait for viewer to fully initialize.
@@ -40,11 +33,6 @@ window.addEventListener('webviewerloaded', async () => {
 
   // Open the document.
   window.PDFViewerApplication.open(config.docPath);
-
-  // Assure sidebar is closed.
-  PDFViewerApplication.eventBus.on('sidebarviewchanged', () => {
-    PDFViewerApplication.pdfSidebar.close();
-  }, {once: true});
 }, {once: true});
 
 window.addEventListener('message', (event) => {
