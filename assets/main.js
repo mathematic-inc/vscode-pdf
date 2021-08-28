@@ -18,11 +18,11 @@
 
 (function() {
 function loadConfig() {
-  const elem = document.getElementById('pdf-view-config')
+  const elem = document.getElementById('pdf-view-config');
   if (elem) {
-    return JSON.parse(elem.getAttribute('data-config'))
+    return JSON.parse(elem.getAttribute('data-config'));
   }
-  throw new Error('Could not load configuration.')
+  throw new Error('Could not load configuration.');
 }
 
 const config = loadConfig();
@@ -35,18 +35,23 @@ window.addEventListener('webviewerloaded', async () => {
   window.PDFViewerApplication.open(config.docPath);
 }, {once: true});
 
-window.addEventListener('message', (event) => {
+window.addEventListener('message', async (event) => {
+  const currentPageNumber =
+      window.PDFViewerApplication.pdfViewer.currentPageNumber;
   switch (event.data.action) {
     case 'reload':
-      window.PDFViewerApplication.open(config.docPath)
+      await window.PDFViewerApplication.open(config.docPath);
+      await window.PDFViewerApplication.pdfViewer.pagesPromise;
+      window.PDFViewerApplication.pdfViewer.currentPageNumber = Math.min(
+          currentPageNumber, window.PDFViewerApplication.pdfViewer.pagesCount);
       break;
   }
 });
 
 window.onerror = function() {
-  const msg = document.createElement('body')
+  const msg = document.createElement('body');
   msg.innerText =
-      'An error occurred while loading the file. Please open it again.'
-  document.body = msg
-}
-}());
+      'An error occurred while loading the file. Please open it again.';
+  document.body = msg;
+};
+})();
