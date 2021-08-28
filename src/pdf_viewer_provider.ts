@@ -15,7 +15,7 @@
  */
 
 import {join} from 'path';
-import {CustomReadonlyEditorProvider, Disposable, ExtensionContext, Uri, Webview, WebviewPanel, window, workspace} from 'vscode';
+import {CustomReadonlyEditorProvider, Disposable, ExtensionContext, Uri, Webview, WebviewPanel, window} from 'vscode';
 
 import rawViewerHtml from '../assets/web/viewer.html';
 
@@ -50,7 +50,7 @@ export class PDFViewerProvider implements CustomReadonlyEditorProvider {
   private extensionRoot: Uri;
 
   constructor(context: ExtensionContext) {
-    this.extensionRoot = Uri.file(context.extensionPath)
+    this.extensionRoot = Uri.file(context.extensionPath);
   }
 
   async openCustomDocument(uri: Uri) {
@@ -58,7 +58,7 @@ export class PDFViewerProvider implements CustomReadonlyEditorProvider {
 
     const listeners: Disposable[] = [];
 
-    listeners.push(document.onDidChange(e => {
+    listeners.push(document.onDidChange((e) => {
       // Update all webviews when the document changes
       for (const webviewPanel of this.webviews.get(e)) {
         webviewPanel.webview.postMessage({action: 'reload'});
