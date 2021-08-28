@@ -15,6 +15,6 @@
  */
 
 declare module '*.html' {
-  const html: string
+  const html: string;
   export default html;
 }
