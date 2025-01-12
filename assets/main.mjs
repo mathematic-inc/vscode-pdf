@@ -30,6 +30,32 @@ PDFViewerApplicationOptions.set("defaultUrl", "");
 PDFViewerApplicationOptions.set("disablePreferences", true);
 PDFViewerApplicationOptions.set("workerSrc", config.workerSrc);
 
+function invertOrResetPageColor(doInvert) {
+  const invertFilter = doInvert
+    ? "invert(64%) contrast(228%) brightness(80%) hue-rotate(180deg)"
+    : null;
+
+  document.getElementById("viewer").style.filter = invertFilter;
+  document.getElementById("thumbnailView").style.filter = invertFilter;
+}
+
+switch (config.pageColorTheme) {
+  case "Follow system":
+    const darkModePreference = window.matchMedia(
+      "(prefers-color-scheme: dark)"
+    );
+    invertOrResetPageColor(darkModePreference.matches);
+    darkModePreference.addEventListener("change", (e) => {
+      invertOrResetPageColor(e.matches);
+    });
+    break;
+  case "Unchanged":
+    break;
+  case "Invert":
+    invertOrResetPageColor(true);
+    break;
+}
+
 void (async () => {
   await window.PDFViewerApplication.initializedPromise;
   window.PDFViewerApplication.open(config);
