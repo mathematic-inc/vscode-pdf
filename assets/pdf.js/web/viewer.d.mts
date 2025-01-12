@@ -1,0 +1,5 @@
+declare var __webpack_exports__PDFViewerApplication: any;
+declare var __webpack_exports__PDFViewerApplicationConstants: any;
+declare var __webpack_exports__PDFViewerApplicationOptions: any;
+export { __webpack_exports__PDFViewerApplication as PDFViewerApplication, __webpack_exports__PDFViewerApplicationConstants as PDFViewerApplicationConstants, __webpack_exports__PDFViewerApplicationOptions as PDFViewerApplicationOptions };
+//# sourceMappingURL=viewer.d.mts.map

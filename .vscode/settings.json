@@ -1,5 +1,4 @@
 {
-  "cSpell.words": [
-    "webviews"
-  ]
+  "cSpell.words": ["webviews"],
+  "typescript.tsdk": "node_modules/typescript/lib"
 }
