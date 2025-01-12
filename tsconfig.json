@@ -1,11 +1,40 @@
 {
+  "$schema": "https://json.schemastore.org/tsconfig",
   "compilerOptions": {
-    "module": "ES2020",
-    "target": "ES2020",
-    "outDir": "out",
+    "incremental": true,
+    "target": "ES2024",
+    "lib": [
+      // See https://github.com/microsoft/TypeScript/blob/main/src/lib/esnext.full.d.ts
+      "ESNext",
+      "DOM",
+      "WebWorker.ImportScripts",
+      "DOM.Iterable",
+      "DOM.AsyncIterable"
+    ],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noUncheckedSideEffectImports": true,
+    "strictBuiltinIteratorReturn": true,
+    "allowUnusedLabels": false,
+    "allowUnreachableCode": false,
+    "skipLibCheck": true,
     "sourceMap": true,
-    "rootDir": "src",
-    "strict": true
+    "inlineSources": true,
+    "declaration": true,
+    "declarationMap": true,
+    "noEmitOnError": true,
+    "allowJs": true,
+    "resolveJsonModule": true,
+    "noErrorTruncation": true,
+    "verbatimModuleSyntax": true
   },
   "exclude": ["node_modules", ".vscode-test"]
 }
