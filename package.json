@@ -9,7 +9,7 @@
     "url": "https://github.com/mathematic-inc/vscode-pdf.git"
   },
   "engines": {
-    "vscode": "^1.58.1"
+    "vscode": "^1.96.0"
   },
   "icon": "icon.png",
   "license": "Apache-2.0",
@@ -20,9 +20,6 @@
   "categories": [
     "Visualization",
     "Other"
-  ],
-  "activationEvents": [
-    "onCustomEditor:pdf.view"
   ],
   "main": "./dist/extension.js",
   "contributes": {
