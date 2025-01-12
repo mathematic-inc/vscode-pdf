@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import {ExtensionContext} from 'vscode';
-import {PDFViewerProvider} from './pdf_viewer_provider';
+import type { ExtensionContext } from "vscode";
+import { PDFViewerProvider } from "./pdf_viewer_provider";
 
 export function activate(context: ExtensionContext): void {
   context.subscriptions.push(PDFViewerProvider.register(context));

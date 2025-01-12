@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import * as vscode from 'vscode';
+import * as vscode from "vscode";
 
 export function disposeAll(disposables: vscode.Disposable[]): void {
   while (disposables.length) {

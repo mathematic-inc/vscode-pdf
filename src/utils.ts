@@ -15,5 +15,5 @@
  */
 
 export function escapeAttribute(o: unknown) {
-  return JSON.stringify(o).replace(/"/g, '&quot;');
+  return JSON.stringify(o).replace(/"/g, "&quot;");
 }

@@ -4,6 +4,10 @@
   "description": "Portable document format (PDF) viewer for Visual Studio Code.",
   "version": "0.0.6",
   "publisher": "mathematic",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mathematic-inc/vscode-pdf.git"
+  },
   "engines": {
     "vscode": "^1.58.1"
   },
@@ -35,20 +39,19 @@
     ]
   },
   "scripts": {
-    "vscode:prepublish": "yarn run package",
+    "vscode:prepublish": "npm run package",
     "build": "webpack",
     "watch": "webpack --watch",
     "package": "webpack --mode production --devtool hidden-source-map",
-    "test-compile": "yarn run compile",
-    "test-watch": "yarn run watch"
+    "test-compile": "npm run compile",
+    "test-watch": "npm run watch"
   },
   "devDependencies": {
-    "@types/node": "20.x",
-    "@types/vscode": "1.81.0",
-    "ts-loader": "9.4.4",
-    "typescript": "5.1.6",
-    "webpack": "5.88.2",
-    "webpack-cli": "5.1.4"
-  },
-  "dependencies": {}
+    "@types/node": "22.x",
+    "@types/vscode": "1.96.0",
+    "ts-loader": "9.5.2",
+    "typescript": "5.7.3",
+    "webpack": "5.97.1",
+    "webpack-cli": "6.0.1"
+  }
 }

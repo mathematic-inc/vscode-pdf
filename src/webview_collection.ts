@@ -14,15 +14,17 @@
  * limitations under the License.
  */
 
-import {Uri, WebviewPanel} from 'vscode';
+import { Uri, type WebviewPanel } from "vscode";
 
 /** Tracks all webviews. */
 export class WebviewCollection {
-  private readonly _webviews = new Set<
-      {readonly resource: string; readonly webviewPanel: WebviewPanel;}>();
+  private readonly _webviews = new Set<{
+    readonly resource: string;
+    readonly webviewPanel: WebviewPanel;
+  }>();
 
   /** Get all known webviews for a given uri. */
-  public * get(uri: Uri): Iterable<WebviewPanel> {
+  public *get(uri: Uri): Iterable<WebviewPanel> {
     const key = uri.toString();
     for (const entry of this._webviews) {
       if (entry.resource === key) {
@@ -33,7 +35,7 @@ export class WebviewCollection {
 
   /** Add a new webview to the collection. */
   public add(uri: Uri, webviewPanel: WebviewPanel) {
-    const entry = {resource: uri.toString(), webviewPanel};
+    const entry = { resource: uri.toString(), webviewPanel };
     this._webviews.add(entry);
 
     webviewPanel.onDidDispose(() => {

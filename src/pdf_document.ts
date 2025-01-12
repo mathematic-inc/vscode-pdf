@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import {CustomDocument, EventEmitter, Uri, workspace} from 'vscode';
-import {Disposable} from './disposable';
+import { type CustomDocument, EventEmitter, Uri, workspace } from "vscode";
+import { Disposable } from "./disposable";
 
 function areUriEqual(l: Uri, r: Uri) {
   return `${l}` === `${r}`;
@@ -31,8 +31,9 @@ export class PDFDocument extends Disposable implements CustomDocument {
     super();
     this._uri = uri;
 
-    const watcher =
-        this._register(workspace.createFileSystemWatcher(uri.fsPath));
+    const watcher = this._register(
+      workspace.createFileSystemWatcher(uri.fsPath)
+    );
 
     const onChangeHandler = (e: Uri) => {
       if (areUriEqual(e, uri)) {
@@ -65,7 +66,7 @@ export class PDFDocument extends Disposable implements CustomDocument {
    *
    * This happens when all editors for it have been closed.
    */
-  dispose(): void {
+  override dispose(): void {
     this._onDidDelete.fire(this.uri);
     super.dispose();
   }
