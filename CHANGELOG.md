@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.4](https://github.com/mathematic-inc/vscode-pdf/compare/v0.1.3...v0.1.4) (2025-01-28)
+
+
+### Bug Fixes
+
+* Add better error handling ([0fa5989](https://github.com/mathematic-inc/vscode-pdf/commit/0fa5989c7c7225daa98481f75a6c8dd75197ced3))
+
 ## [0.1.3](https://github.com/mathematic-inc/vscode-pdf/compare/v0.1.2...v0.1.3) (2025-01-28)
 
 
