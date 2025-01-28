@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.3](https://github.com/mathematic-inc/vscode-pdf/compare/v0.1.2...v0.1.3) (2025-01-28)
+
+
+### Bug Fixes
+
+* **thumbnails:** Adapt csp to fix thumbnails ([7a773f5](https://github.com/mathematic-inc/vscode-pdf/commit/7a773f5e3e1e835fb15a15d2774e06d0feab80a1))
+* **thumbnails:** Adapt csp to fix thumbnails ([#3](https://github.com/mathematic-inc/vscode-pdf/issues/3)) ([a847b6c](https://github.com/mathematic-inc/vscode-pdf/commit/a847b6cc922fa3845efe76956e5bb9cd23a62dec))
+
 ## [0.1.2](https://github.com/mathematic-inc/vscode-pdf/compare/v0.1.1...v0.1.2) (2025-01-12)
 
 
