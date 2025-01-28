@@ -23,6 +23,7 @@ import {
   type Webview,
   type WebviewPanel,
   window,
+  workspace,
 } from "vscode";
 
 import rawViewerHtml from "../assets/pdf.js/web/viewer.html";
@@ -122,9 +123,14 @@ export class PDFViewerProvider implements CustomReadonlyEditorProvider {
 
     const cspSource = webview.cspSource;
 
+    const pageColorTheme = workspace
+      .getConfiguration("vscode-pdf")
+      .get("pageColorTheme");
+
     const settings = {
       url: `${webview.asWebviewUri(document.uri)}`,
       workerSrc: `${resolvePdfJsURI("build", "pdf.worker.mjs")}`,
+      pageColorTheme,
     };
 
     return viewerHtml

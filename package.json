@@ -33,7 +33,28 @@
           }
         ]
       }
-    ]
+    ],
+    "configuration": {
+      "type": "object",
+      "title": "vscode-pdf",
+      "properties": {
+        "vscode-pdf.pageColorTheme": {
+          "type": "string",
+          "default": "Unchanged",
+          "enum": [
+            "Follow system",
+            "Unchanged",
+            "Invert"
+          ],
+          "enumDescriptions": [
+            "Dark system theme: invert; Light system theme: unchanged",
+            "Don't change the page color theme",
+            "Invert the page color theme"
+          ],
+          "description": "Change the page color theme"
+        }
+      }
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run package",
