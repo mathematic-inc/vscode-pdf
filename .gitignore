@@ -67,7 +67,7 @@ web_modules/
 
 # TypeScript output
 *.map
-*.d.ts
+*.d.*ts
 
 # Yarn Integrity file
 .yarn-integrity
