@@ -132,7 +132,7 @@ export class PDFViewerProvider implements CustomReadonlyEditorProvider {
         /* html */ `<title>PDF.js viewer</title>`,
         /* html */
         `
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; connect-src ${cspSource}; script-src 'unsafe-inline' ${cspSource}; worker-src blob: ${cspSource}; style-src 'unsafe-inline' ${cspSource}; img-src * ${cspSource}">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; connect-src ${cspSource}; script-src 'unsafe-inline' ${cspSource}; worker-src blob: ${cspSource}; style-src 'unsafe-inline' ${cspSource}; img-src * ${cspSource} data:;">
 <meta id="pdf-view-config" data-config="${escapeAttribute(settings)}">
 
 <title>PDF.js viewer</title>
