@@ -120,3 +120,5 @@ dist
 .pnp.*
 
 *.vsix
+
+.DS_STORE
