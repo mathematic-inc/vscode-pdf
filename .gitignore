@@ -65,6 +65,10 @@ web_modules/
 # Output of 'npm pack'
 *.tgz
 
+# TypeScript output
+*.map
+*.d.ts
+
 # Yarn Integrity file
 .yarn-integrity
 
