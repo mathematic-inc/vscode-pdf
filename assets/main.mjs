@@ -51,9 +51,9 @@ window.addEventListener("message", async (event) => {
   }
 });
 
-window.onerror = function () {
+window.addEventListener('error', (error) => {
   const msg = document.createElement("body");
   msg.innerText =
-    "An error occurred while loading the file. Please open it again.";
+    `An error occurred (${error.message}) while loading the file. Please open it again. `;
   document.body = msg;
-};
+});
