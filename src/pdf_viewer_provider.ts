@@ -124,7 +124,6 @@ export class PDFViewerProvider implements CustomReadonlyEditorProvider {
 
     const settings = {
       url: `${webview.asWebviewUri(document.uri)}`,
-      workerSrc: `${resolvePdfJsURI("build", "pdf.worker.mjs")}`,
     };
 
     return viewerHtml
