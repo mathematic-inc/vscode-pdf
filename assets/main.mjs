@@ -28,7 +28,6 @@ const config = loadConfig();
 
 PDFViewerApplicationOptions.set("defaultUrl", "");
 PDFViewerApplicationOptions.set("disablePreferences", true);
-PDFViewerApplicationOptions.set("workerSrc", config.workerSrc);
 
 void (async () => {
   await window.PDFViewerApplication.initializedPromise;
