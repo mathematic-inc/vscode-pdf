@@ -23,6 +23,7 @@ import {
   type Webview,
   type WebviewPanel,
   window,
+  commands,
 } from "vscode";
 
 import rawViewerHtml from "../assets/pdf.js/web/viewer.html";
@@ -44,6 +45,8 @@ const viewerHtml = rawViewerHtml
   )
   .replace(/* html */ `<script src="viewer.mjs" type="module"></script>`, "")
   .replace(/* html */ `<link rel="stylesheet" href="viewer.css">`, "");
+
+const vscodeWebviewUriPrefix = "https://file+.vscode-resource.vscode-cdn.net"
 
 export class PDFViewerProvider implements CustomReadonlyEditorProvider {
   public static readonly viewType = "pdf.view";
@@ -111,6 +114,14 @@ export class PDFViewerProvider implements CustomReadonlyEditorProvider {
       document,
       webviewPanel.webview
     );
+
+    webviewPanel.webview.onDidReceiveMessage(msg => {
+        if("open" in msg){
+            const urlWithCdnScheme = msg.open as string
+            const [file, hash] = urlWithCdnScheme.substring(vscodeWebviewUriPrefix.length).split("#")
+            commands.executeCommand("vscode.open", Uri.file(file!).with({fragment: hash ?? ""}))
+        }
+    })
   }
 
   private getHtmlForWebview(document: PDFDocument, webview: Webview): string {
@@ -124,6 +135,7 @@ export class PDFViewerProvider implements CustomReadonlyEditorProvider {
 
     const settings = {
       url: `${webview.asWebviewUri(document.uri)}`,
+      docBaseUrl: `${webview.asWebviewUri(document.uri)}`,
     };
 
     return viewerHtml

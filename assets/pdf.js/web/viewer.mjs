@@ -1271,6 +1271,25 @@ class PDFLinkService {
 class SimpleLinkService extends PDFLinkService {
   setDocument(pdfDocument, baseUrl = null) {}
 }
+class VSCodeLinkService extends PDFLinkService {
+    #vscode
+    constructor(vscode, ...args){
+        super(...args)
+        this.#vscode = vscode
+    }
+
+    addLinkAttributes(link, url, newWindow = false){
+        if(typeof url === "string" && url.startsWith("https://file+.vscode-resource.vscode-cdn.net")){
+            link.onclick = () => {
+                this.#vscode.postMessage({
+                    open: url
+                });
+            };
+        } else {
+            return super.addLinkAttributes(link, url, newWindow)
+        }
+    }
+}
 
 ;// ./web/pdfjs.js
 const {
@@ -13347,7 +13366,8 @@ const PDFViewerApplication = {
     const pdfRenderingQueue = new PDFRenderingQueue();
     pdfRenderingQueue.onIdle = this._cleanup.bind(this);
     this.pdfRenderingQueue = pdfRenderingQueue;
-    const pdfLinkService = new PDFLinkService({
+    const vscode = acquireVsCodeApi()
+    const pdfLinkService = new VSCodeLinkService(vscode, {
       eventBus,
       externalLinkTarget: AppOptions.get("externalLinkTarget"),
       externalLinkRel: AppOptions.get("externalLinkRel"),
