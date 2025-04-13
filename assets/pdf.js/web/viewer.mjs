@@ -1271,25 +1271,6 @@ class PDFLinkService {
 class SimpleLinkService extends PDFLinkService {
   setDocument(pdfDocument, baseUrl = null) {}
 }
-class VSCodeLinkService extends PDFLinkService {
-    #vscode
-    constructor(vscode, ...args){
-        super(...args)
-        this.#vscode = vscode
-    }
-
-    addLinkAttributes(link, url, newWindow = false){
-        if(typeof url === "string" && url.startsWith("https://file+.vscode-resource.vscode-cdn.net")){
-            link.onclick = () => {
-                this.#vscode.postMessage({
-                    open: url
-                });
-            };
-        } else {
-            return super.addLinkAttributes(link, url, newWindow)
-        }
-    }
-}
 
 ;// ./web/pdfjs.js
 const {
@@ -15383,3 +15364,24 @@ var __webpack_exports__PDFViewerApplicationOptions = __webpack_exports__.PDFView
 export { __webpack_exports__PDFViewerApplication as PDFViewerApplication, __webpack_exports__PDFViewerApplicationConstants as PDFViewerApplicationConstants, __webpack_exports__PDFViewerApplicationOptions as PDFViewerApplicationOptions };
 
 //# sourceMappingURL=viewer.mjs.map
+
+
+class VSCodeLinkService extends PDFLinkService {
+    #vscode
+    constructor(vscode, ...args){
+        super(...args)
+        this.#vscode = vscode
+    }
+
+    addLinkAttributes(link, url, newWindow = false){
+        if(typeof url === "string" && url.startsWith("https://file+.vscode-resource.vscode-cdn.net")){
+            link.onclick = () => {
+                this.#vscode.postMessage({
+                    open: url
+                });
+            };
+        } else {
+            return super.addLinkAttributes(link, url, newWindow)
+        }
+    }
+}
