@@ -31,7 +31,11 @@ PDFViewerApplicationOptions.set("disablePreferences", true);
 
 void (async () => {
   await window.PDFViewerApplication.initializedPromise;
-  window.PDFViewerApplication.open(config);
+  await window.PDFViewerApplication.open(config);
+  const [,hash] = config.url.split("#")
+  if(hash){
+    PDFViewerApplication.pdfLinkService.setHash(decodeURIComponent(hash))
+  }
 })();
 
 window.addEventListener("message", async (event) => {

@@ -24,6 +24,10 @@ fi
 
 # Unzip the file into the target directory
 unzip pdfjs.zip -d assets/pdf.js
+if [ "$?" != "0" ]; then
+    echo "Failed to unzip pdfjs.zip"
+    exit 1
+fi
 
 # Remove the zip file after extraction
 rm pdfjs.zip
