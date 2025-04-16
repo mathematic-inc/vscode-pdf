@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.6](https://github.com/mathematic-inc/vscode-pdf/compare/v0.1.5...v0.1.6) (2025-04-16)
+
+
+### Features
+
+* Add support for opening relative links to other PDFs ([#9](https://github.com/mathematic-inc/vscode-pdf/issues/9)) ([0dd02b7](https://github.com/mathematic-inc/vscode-pdf/commit/0dd02b71650fba7b1fb2d25259913aae272aa468))
+
 ## [0.1.5](https://github.com/mathematic-inc/vscode-pdf/compare/v0.1.4...v0.1.5) (2025-02-02)
 
 
