@@ -24,6 +24,7 @@ import {
   type WebviewPanel,
   window,
   commands,
+  workspace,
 } from "vscode";
 
 import rawViewerHtml from "../assets/pdf.js/web/viewer.html";
@@ -68,6 +69,18 @@ export class PDFViewerProvider implements CustomReadonlyEditorProvider {
 
   constructor(context: ExtensionContext) {
     this.extensionRoot = Uri.file(context.extensionPath);
+
+    workspace.onDidChangeConfiguration((e) => {
+        if (e.affectsConfiguration("pdf.enableDarkMode")) {
+            const enabled = workspace.getConfiguration("pdf").get<boolean>("enableDarkMode", false);
+            for (const webviewPanel of this.webviews.getAll()) {
+                webviewPanel.webview.postMessage({
+                    type: "update-theme",
+                    darkMode: enabled
+                });
+            }
+        }
+    });
   }
 
   async openCustomDocument(uri: Uri) {
@@ -121,7 +134,7 @@ export class PDFViewerProvider implements CustomReadonlyEditorProvider {
             const [file, hash] = urlWithCdnScheme.substring(vscodeWebviewUriPrefix.length).split("#")
             commands.executeCommand("vscode.open", Uri.file(file!).with({fragment: hash ?? ""}))
         }
-    })
+    });
   }
 
   private getHtmlForWebview(document: PDFDocument, webview: Webview): string {
@@ -132,10 +145,12 @@ export class PDFViewerProvider implements CustomReadonlyEditorProvider {
       resolveUri("assets", "pdf.js", ...paths);
 
     const cspSource = webview.cspSource;
+    const darkMode = workspace.getConfiguration("pdf").get<boolean>("enableDarkMode", false);
 
     const settings = {
       url: `${webview.asWebviewUri(document.uri)}`,
       docBaseUrl: `${webview.asWebviewUri(document.uri)}`,
+      darkMode: darkMode
     };
 
     return viewerHtml

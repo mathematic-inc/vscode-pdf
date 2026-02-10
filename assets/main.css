@@ -17,3 +17,8 @@
 body {
   padding: 0;
 }
+
+/* Dark Mode Filter: Invert color of PDF pages only */
+.pdf-dark-mode .page {
+    filter: invert(1) hue-rotate(180deg);
+}

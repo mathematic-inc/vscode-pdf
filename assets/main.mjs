@@ -31,6 +31,11 @@ PDFViewerApplicationOptions.set("disablePreferences", true);
 
 void (async () => {
   await window.PDFViewerApplication.initializedPromise;
+
+  if (config.darkMode) {
+      document.body.classList.add("pdf-dark-mode");
+  }
+
   await window.PDFViewerApplication.open(config);
   const [,hash] = config.url.split("#")
   if(hash){
@@ -39,6 +44,15 @@ void (async () => {
 })();
 
 window.addEventListener("message", async (event) => {
+  if (event.data.type === 'update-theme') {
+    if (event.data.darkMode) {
+        document.body.classList.add("pdf-dark-mode");
+    } else {
+        document.body.classList.remove("pdf-dark-mode");
+    }
+    return;
+  }
+
   await window.PDFViewerApplication.initializedPromise;
   const currentPageNumber =
     window.PDFViewerApplication.pdfViewer.currentPageNumber;

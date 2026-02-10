@@ -33,7 +33,17 @@
           }
         ]
       }
-    ]
+    ],
+    "configuration": {
+      "title": "PDF Viewer",
+      "properties": {
+        "pdf.enableDarkMode": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enable Dark Mode for PDF Viewer (inverts colors of the page)."
+        }
+      }
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run package",

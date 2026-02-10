@@ -33,6 +33,12 @@ export class WebviewCollection {
     }
   }
 
+  public *getAll(): Iterable<WebviewPanel> {
+    for (const entry of this._webviews) {
+        yield entry.webviewPanel;
+    }
+  }
+
   /** Add a new webview to the collection. */
   public add(uri: Uri, webviewPanel: WebviewPanel) {
     const entry = { resource: uri.toString(), webviewPanel };

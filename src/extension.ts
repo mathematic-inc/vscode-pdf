@@ -14,11 +14,38 @@
  * limitations under the License.
  */
 
-import type { ExtensionContext } from "vscode";
+import { type ExtensionContext, window, commands, workspace, StatusBarAlignment } from "vscode";
 import { PDFViewerProvider } from "./pdf_viewer_provider";
 
 export function activate(context: ExtensionContext): void {
   context.subscriptions.push(PDFViewerProvider.register(context));
+
+  // Add Status Bar Item for Dark Mode
+  const darkModeStatusBarItem = window.createStatusBarItem(StatusBarAlignment.Right, 100);
+  darkModeStatusBarItem.command = "pdf.toggleDarkMode";
+  darkModeStatusBarItem.tooltip = "Toggle PDF Dark Mode";
+  context.subscriptions.push(darkModeStatusBarItem);
+
+  const updateStatusBar = () => {
+    const enabled = workspace.getConfiguration("pdf").get<boolean>("enableDarkMode", false);
+    darkModeStatusBarItem.text = enabled ? "$(moon) PDF Dark" : "$(sun) PDF Light";
+    darkModeStatusBarItem.show();
+  };
+
+  context.subscriptions.push(workspace.onDidChangeConfiguration(e => {
+      if (e.affectsConfiguration("pdf.enableDarkMode")) {
+          updateStatusBar();
+      }
+  }));
+
+  updateStatusBar();
+
+  // Register Toggle Command
+  context.subscriptions.push(commands.registerCommand("pdf.toggleDarkMode", async () => {
+      const config = workspace.getConfiguration("pdf");
+      const current = config.get<boolean>("enableDarkMode", false);
+      await config.update("enableDarkMode", !current, true); // true = updates in Global settings
+  }));
 }
 
 export function deactivate() {}
