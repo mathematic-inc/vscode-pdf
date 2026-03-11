@@ -28,10 +28,36 @@ const config = loadConfig();
 
 PDFViewerApplicationOptions.set("defaultUrl", "");
 PDFViewerApplicationOptions.set("disablePreferences", true);
+PDFViewerApplicationOptions.set(
+  "defaultZoomValue",
+  config.defaultZoomValue ?? "auto"
+);
+PDFViewerApplicationOptions.set(
+  "sidebarViewOnLoad",
+  config.sidebarViewOnLoad ?? 0
+);
+
+// Prevent pdf.js from intercepting Ctrl+P/Cmd+P and triggering the print dialog.
+document.addEventListener(
+  "keydown",
+  (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key === "p") {
+      e.preventDefault();
+      e.stopImmediatePropagation();
+    }
+  },
+  true
+);
+
+// Track whether the initial load has completed so that minor post-load
+// runtime errors don't replace the viewer with a crash screen.
+let loaded = false;
 
 void (async () => {
   await window.PDFViewerApplication.initializedPromise;
   await window.PDFViewerApplication.open(config);
+  await window.PDFViewerApplication.pdfViewer.pagesPromise;
+  loaded = true;
   const [, hash] = config.url.split("#");
   if (hash) {
     window.PDFViewerApplication.pdfLinkService.setHash(
@@ -46,8 +72,10 @@ window.addEventListener("message", async (event) => {
     window.PDFViewerApplication.pdfViewer.currentPageNumber;
   switch (event.data.action) {
     case "reload":
+      loaded = false;
       await window.PDFViewerApplication.open(config);
       await window.PDFViewerApplication.pdfViewer.pagesPromise;
+      loaded = true;
       window.PDFViewerApplication.pdfViewer.currentPageNumber = Math.min(
         currentPageNumber,
         window.PDFViewerApplication.pdfViewer.pagesCount
@@ -57,7 +85,7 @@ window.addEventListener("message", async (event) => {
 });
 
 window.addEventListener("error", (error) => {
-  const msg = document.createElement("body");
-  msg.innerText = `An error occurred (${error.message}) while loading the file. Please open it again. `;
-  document.body = msg;
+  if (!loaded) {
+    document.body.textContent = `An error occurred (${error.message}) while loading the file. Please open it again.`;
+  }
 });
