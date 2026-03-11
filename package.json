@@ -38,7 +38,65 @@
           }
         ]
       }
-    ]
+    ],
+    "configuration": {
+      "title": "PDF",
+      "type": "object",
+      "properties": {
+        "pdf.defaultZoomValue": {
+          "type": "string",
+          "default": "auto",
+          "scope": "resource",
+          "enum": [
+            "auto",
+            "page-actual",
+            "page-fit",
+            "page-width",
+            "50",
+            "75",
+            "100",
+            "125",
+            "150",
+            "200"
+          ],
+          "enumDescriptions": [
+            "Automatic",
+            "Actual size",
+            "Fit page",
+            "Fit width",
+            "50%",
+            "75%",
+            "100%",
+            "125%",
+            "150%",
+            "200%"
+          ],
+          "description": "Default zoom level when opening a PDF."
+        },
+        "pdf.sidebarViewOnLoad": {
+          "type": "number",
+          "default": 0,
+          "scope": "resource",
+          "enum": [
+            -1,
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "enumDescriptions": [
+            "Restore previous state",
+            "None",
+            "Thumbnails",
+            "Outline",
+            "Attachments",
+            "Layers"
+          ],
+          "description": "Sidebar panel to show when opening a PDF."
+        }
+      }
+    }
   },
   "scripts": {
     "vscode:prepublish": "pnpm run package",
