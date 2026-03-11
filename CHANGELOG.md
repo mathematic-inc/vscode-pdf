@@ -5,6 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.8](https://github.com/mathematic-inc/vscode-pdf/compare/v0.1.7...v0.1.8) (2026-03-11)
+
+
+### Features
+
+* Add support for opening relative links to other PDFs ([#9](https://github.com/mathematic-inc/vscode-pdf/issues/9)) ([0dd02b7](https://github.com/mathematic-inc/vscode-pdf/commit/0dd02b71650fba7b1fb2d25259913aae272aa468))
+* Modernize tooling and project structure ([#26](https://github.com/mathematic-inc/vscode-pdf/issues/26)) ([b9ab389](https://github.com/mathematic-inc/vscode-pdf/commit/b9ab389391ef64d369ebc0f4ef034c0ad231c54c))
+* Update PDF.js to 4.10.38 ([db6b881](https://github.com/mathematic-inc/vscode-pdf/commit/db6b8813c9a18bfbd39276d35ec313f2702134d6))
+
+
+### Bug Fixes
+
+* Add better error handling ([0fa5989](https://github.com/mathematic-inc/vscode-pdf/commit/0fa5989c7c7225daa98481f75a6c8dd75197ced3))
+* Remove worker src ([ba13d00](https://github.com/mathematic-inc/vscode-pdf/commit/ba13d001e982b87e39ec05fc4a17bc3fe6692257))
+* Resolve VSIX glob path before publishing extension ([#28](https://github.com/mathematic-inc/vscode-pdf/issues/28)) ([c31e64d](https://github.com/mathematic-inc/vscode-pdf/commit/c31e64dea6c42135e1ab52e87246f4b3e9f6257a))
+* **thumbnails:** Adapt csp to fix thumbnails ([7a773f5](https://github.com/mathematic-inc/vscode-pdf/commit/7a773f5e3e1e835fb15a15d2774e06d0feab80a1))
+* **thumbnails:** Adapt csp to fix thumbnails ([#3](https://github.com/mathematic-inc/vscode-pdf/issues/3)) ([a847b6c](https://github.com/mathematic-inc/vscode-pdf/commit/a847b6cc922fa3845efe76956e5bb9cd23a62dec))
+* Update engine ([8cd4434](https://github.com/mathematic-inc/vscode-pdf/commit/8cd4434985a1d961e6db8e0a7338d9d89ae9efe1))
+
 ## [0.1.7](https://github.com/mathematic-inc/vscode-pdf/compare/v0.1.6...v0.1.7) (2026-03-11)
 
 
