@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Mathematic, Inc.
+ * Copyright 2021 Mathematic Inc
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { type CustomDocument, EventEmitter, Uri, workspace } from "vscode";
+import { type CustomDocument, EventEmitter, type Uri, workspace } from "vscode";
 import { Disposable } from "./disposable";
 
 function areUriEqual(l: Uri, r: Uri) {
@@ -45,7 +45,7 @@ export class PDFDocument extends Disposable implements CustomDocument {
     this._register(watcher.onDidCreate(onChangeHandler));
   }
 
-  public get uri() {
+  get uri() {
     return this._uri;
   }
 
@@ -53,13 +53,13 @@ export class PDFDocument extends Disposable implements CustomDocument {
   /**
    * Fired when the document is deleted.
    */
-  public readonly onDidDelete = this._onDidDelete.event;
+  readonly onDidDelete = this._onDidDelete.event;
 
   private readonly _onDidChange = this._register(new EventEmitter<Uri>());
   /**
    * Fired to notify webviews that the document has changed.
    */
-  public readonly onDidChange = this._onDidChange.event;
+  readonly onDidChange = this._onDidChange.event;
 
   /**
    * Called by VS Code when there are no more references to the document.
