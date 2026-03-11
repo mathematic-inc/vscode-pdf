@@ -24,6 +24,7 @@ import {
   type Webview,
   type WebviewPanel,
   window,
+  workspace,
 } from "vscode";
 
 import rawViewerHtml from "../assets/pdf.js/web/viewer.html";
@@ -137,9 +138,12 @@ export class PDFViewerProvider implements CustomReadonlyEditorProvider {
 
     const cspSource = webview.cspSource;
 
+    const config = workspace.getConfiguration("pdf");
     const settings = {
       url: `${webview.asWebviewUri(document.uri)}`,
       docBaseUrl: `${webview.asWebviewUri(document.uri)}`,
+      defaultZoomValue: config.get<string>("defaultZoomValue", "auto"),
+      sidebarViewOnLoad: config.get<number>("sidebarViewOnLoad", 0),
     };
 
     return viewerHtml
