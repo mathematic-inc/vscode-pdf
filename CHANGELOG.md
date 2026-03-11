@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.9](https://github.com/mathematic-inc/vscode-pdf/compare/v0.1.8...v0.1.9) (2026-03-11)
+
+
+### Bug Fixes
+
+* Set loaded=true after open() to prevent overlay manager crash on load ([#33](https://github.com/mathematic-inc/vscode-pdf/issues/33)) ([bb0f4d5](https://github.com/mathematic-inc/vscode-pdf/commit/bb0f4d53670780bb9b13e26428a62dca4585f8fb))
+
 ## [0.1.8](https://github.com/mathematic-inc/vscode-pdf/compare/v0.1.7...v0.1.8) (2026-03-11)
 
 
