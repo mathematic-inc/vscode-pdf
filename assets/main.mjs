@@ -32,9 +32,11 @@ PDFViewerApplicationOptions.set("disablePreferences", true);
 void (async () => {
   await window.PDFViewerApplication.initializedPromise;
   await window.PDFViewerApplication.open(config);
-  const [,hash] = config.url.split("#")
-  if(hash){
-    PDFViewerApplication.pdfLinkService.setHash(decodeURIComponent(hash))
+  const [, hash] = config.url.split("#");
+  if (hash) {
+    window.PDFViewerApplication.pdfLinkService.setHash(
+      decodeURIComponent(hash)
+    );
   }
 })();
 
@@ -54,9 +56,8 @@ window.addEventListener("message", async (event) => {
   }
 });
 
-window.addEventListener('error', (error) => {
+window.addEventListener("error", (error) => {
   const msg = document.createElement("body");
-  msg.innerText =
-    `An error occurred (${error.message}) while loading the file. Please open it again. `;
+  msg.innerText = `An error occurred (${error.message}) while loading the file. Please open it again. `;
   document.body = msg;
 });

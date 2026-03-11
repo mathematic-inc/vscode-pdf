@@ -22,25 +22,25 @@
   font: message-box;
 }
 #PDFBug {
-  background-color: rgb(255 255 255);
-  border: 1px solid rgb(102 102 102);
   position: fixed;
   top: 32px;
   right: 0;
   bottom: 0;
-  font-size: 10px;
-  padding: 0;
   width: var(--panel-width);
+  padding: 0;
+  font-size: 10px;
+  background-color: rgb(255 255 255);
+  border: 1px solid rgb(102 102 102);
 }
 #PDFBug .controls {
+  padding: 3px;
   background: rgb(238 238 238);
   border-bottom: 1px solid rgb(102 102 102);
-  padding: 3px;
 }
 #PDFBug .panels {
+  position: absolute;
   inset: 27px 0 0;
   overflow: auto;
-  position: absolute;
 }
 #PDFBug .panels > div {
   padding: 5px;
@@ -65,13 +65,13 @@
   white-space: pre;
 }
 #PDFBug table.showText {
-  border-collapse: collapse;
   text-align: center;
+  border-collapse: collapse;
 }
 #PDFBug table.showText,
 #PDFBug table.showText :is(tr, td) {
-  border: 1px solid black;
   padding: 1px;
+  border: 1px solid black;
 }
 #PDFBug table.showText td.advance {
   color: grey;
@@ -90,10 +90,10 @@
 }
 
 #viewer.textLayer-visible .textLayer span {
-  background-color: rgb(255 255 0 / 0.1);
-  color: rgb(0 0 0);
-  border: solid 1px rgb(255 0 0 / 0.5);
   box-sizing: border-box;
+  color: rgb(0 0 0);
+  background-color: rgb(255 255 0 / 0.1);
+  border: solid 1px rgb(255 0 0 / 0.5);
 }
 
 #viewer.textLayer-visible .textLayer span[aria-owns] {
@@ -101,11 +101,11 @@
 }
 
 #viewer.textLayer-hover .textLayer span:hover {
-  background-color: rgb(255 255 255);
   color: rgb(0 0 0);
+  background-color: rgb(255 255 255);
 }
 
 #viewer.textLayer-shadow .textLayer span {
-  background-color: rgb(255 255 255 / 0.6);
   color: rgb(0 0 0);
+  background-color: rgb(255 255 255 / 0.6);
 }

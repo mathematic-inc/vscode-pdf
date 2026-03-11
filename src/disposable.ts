@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Mathematic, Inc.
+ * Copyright 2021 Mathematic Inc
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import * as vscode from "vscode";
+import type * as vscode from "vscode";
 
 export function disposeAll(disposables: vscode.Disposable[]): void {
   while (disposables.length) {
@@ -30,7 +30,7 @@ export abstract class Disposable {
 
   protected _disposables: vscode.Disposable[] = [];
 
-  public dispose(): void {
+  dispose(): void {
     if (this._isDisposed) {
       return;
     }

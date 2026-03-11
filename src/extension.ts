@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Mathematic, Inc.
+ * Copyright 2021 Mathematic Inc
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,10 +15,12 @@
  */
 
 import type { ExtensionContext } from "vscode";
-import { PDFViewerProvider } from "./pdf_viewer_provider";
+import { PDFViewerProvider } from "./pdf-viewer-provider";
 
 export function activate(context: ExtensionContext): void {
   context.subscriptions.push(PDFViewerProvider.register(context));
 }
 
-export function deactivate() {}
+export function deactivate() {
+  // noop
+}
