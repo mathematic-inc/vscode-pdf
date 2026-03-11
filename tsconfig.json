@@ -1,23 +1,17 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
   "compilerOptions": {
-    "incremental": true,
-    "target": "ES2024",
-    "lib": [
-      // See https://github.com/microsoft/TypeScript/blob/main/src/lib/esnext.full.d.ts
-      "ESNext",
-      "DOM",
-      "WebWorker.ImportScripts",
-      "DOM.Iterable",
-      "DOM.AsyncIterable"
-    ],
     "module": "ESNext",
     "moduleResolution": "Bundler",
-    "forceConsistentCasingInFileNames": true,
+    "target": "ES2024",
+    "lib": ["ES2024"],
+    "rootDir": "src",
     "strict": true,
-    "exactOptionalPropertyTypes": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
+    "exactOptionalPropertyTypes": true,
     "noUncheckedIndexedAccess": true,
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,
@@ -25,15 +19,6 @@
     "strictBuiltinIteratorReturn": true,
     "allowUnusedLabels": false,
     "allowUnreachableCode": false,
-    "skipLibCheck": true,
-    "sourceMap": true,
-    "inlineSources": true,
-    "declaration": true,
-    "declarationMap": true,
-    "noEmitOnError": true,
-    "allowJs": true,
-    "resolveJsonModule": true,
-    "noErrorTruncation": true,
     "verbatimModuleSyntax": true
   },
   "exclude": ["node_modules", ".vscode-test"]

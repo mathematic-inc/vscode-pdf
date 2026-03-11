@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Mathematic, Inc.
+ * Copyright 2021 Mathematic Inc
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Uri, type WebviewPanel } from "vscode";
+import type { Uri, WebviewPanel } from "vscode";
 
 /** Tracks all webviews. */
 export class WebviewCollection {
@@ -24,7 +24,7 @@ export class WebviewCollection {
   }>();
 
   /** Get all known webviews for a given uri. */
-  public *get(uri: Uri): Iterable<WebviewPanel> {
+  *get(uri: Uri): Iterable<WebviewPanel> {
     const key = uri.toString();
     for (const entry of this._webviews) {
       if (entry.resource === key) {
@@ -34,7 +34,7 @@ export class WebviewCollection {
   }
 
   /** Add a new webview to the collection. */
-  public add(uri: Uri, webviewPanel: WebviewPanel) {
+  add(uri: Uri, webviewPanel: WebviewPanel) {
     const entry = { resource: uri.toString(), webviewPanel };
     this._webviews.add(entry);
 
