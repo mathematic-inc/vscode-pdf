@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Mathematic, Inc.
+ * Copyright 2021 Mathematic Inc
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,24 +14,24 @@
  * limitations under the License.
  */
 
-import { join } from "path";
+import { join } from "node:path";
 import {
   type CustomReadonlyEditorProvider,
-  Disposable,
+  commands,
+  type Disposable,
   type ExtensionContext,
   Uri,
   type Webview,
   type WebviewPanel,
   window,
-  commands,
 } from "vscode";
 
 import rawViewerHtml from "../assets/pdf.js/web/viewer.html";
 
 import { disposeAll } from "./disposable";
-import { PDFDocument } from "./pdf_document";
+import { PDFDocument } from "./pdf-document";
 import { escapeAttribute } from "./utils";
-import { WebviewCollection } from "./webview_collection";
+import { WebviewCollection } from "./webview-collection";
 
 const viewerHtml = rawViewerHtml
   .replace(
@@ -46,12 +46,14 @@ const viewerHtml = rawViewerHtml
   .replace(/* html */ `<script src="viewer.mjs" type="module"></script>`, "")
   .replace(/* html */ `<link rel="stylesheet" href="viewer.css">`, "");
 
-const vscodeWebviewUriPrefix = "https://file+.vscode-resource.vscode-cdn.net"
+const vscodeWebviewUriPrefix = "https://file+.vscode-resource.vscode-cdn.net";
+
+const resourcePathRegex = /\/[^/]+?\.\w+$/;
 
 export class PDFViewerProvider implements CustomReadonlyEditorProvider {
-  public static readonly viewType = "pdf.view";
+  static readonly viewType = "pdf.view";
 
-  public static register(context: ExtensionContext) {
+  static register(context: ExtensionContext) {
     return window.registerCustomEditorProvider(
       PDFViewerProvider.viewType,
       new PDFViewerProvider(context),
@@ -64,13 +66,13 @@ export class PDFViewerProvider implements CustomReadonlyEditorProvider {
   /** Tracks all known webviews */
   private readonly webviews = new WebviewCollection();
 
-  private extensionRoot: Uri;
+  private readonly extensionRoot: Uri;
 
   constructor(context: ExtensionContext) {
     this.extensionRoot = Uri.file(context.extensionPath);
   }
 
-  async openCustomDocument(uri: Uri) {
+  openCustomDocument(uri: Uri) {
     const document = new PDFDocument(uri);
 
     const listeners: Disposable[] = [];
@@ -94,16 +96,13 @@ export class PDFViewerProvider implements CustomReadonlyEditorProvider {
       webview.asWebviewUri(Uri.file(join(this.extensionRoot.path, ...paths)));
   }
 
-  async resolveCustomEditor(
-    document: PDFDocument,
-    webviewPanel: WebviewPanel
-  ): Promise<void> {
+  resolveCustomEditor(document: PDFDocument, webviewPanel: WebviewPanel): void {
     // Add the webview to our internal set of active webviews
     this.webviews.add(document.uri, webviewPanel);
 
     // Setup initial content for the webview
     const resourceRoot = document.uri.with({
-      path: document.uri.path.replace(/\/[^/]+?\.\w+$/, "/"),
+      path: document.uri.path.replace(resourcePathRegex, "/"),
     });
     webviewPanel.webview.options = {
       enableScripts: true,
@@ -115,13 +114,18 @@ export class PDFViewerProvider implements CustomReadonlyEditorProvider {
       webviewPanel.webview
     );
 
-    webviewPanel.webview.onDidReceiveMessage(msg => {
-        if("open" in msg){
-            const urlWithCdnScheme = msg.open as string
-            const [file, hash] = urlWithCdnScheme.substring(vscodeWebviewUriPrefix.length).split("#")
-            commands.executeCommand("vscode.open", Uri.file(file!).with({fragment: hash ?? ""}))
-        }
-    })
+    webviewPanel.webview.onDidReceiveMessage((msg) => {
+      if ("open" in msg) {
+        const urlWithCdnScheme = msg.open as string;
+        const [file = "", hash] = urlWithCdnScheme
+          .substring(vscodeWebviewUriPrefix.length)
+          .split("#");
+        commands.executeCommand(
+          "vscode.open",
+          Uri.file(file).with({ fragment: hash ?? "" })
+        );
+      }
+    });
   }
 
   private getHtmlForWebview(document: PDFDocument, webview: Webview): string {
@@ -140,7 +144,7 @@ export class PDFViewerProvider implements CustomReadonlyEditorProvider {
 
     return viewerHtml
       .replace(
-        /* html */ `<title>PDF.js viewer</title>`,
+        /* html */ "<title>PDF.js viewer</title>",
         /* html */
         `
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; connect-src ${cspSource}; script-src 'unsafe-inline' ${cspSource}; worker-src blob: ${cspSource}; style-src 'unsafe-inline' ${cspSource}; img-src * ${cspSource} data:;">
