@@ -56,8 +56,8 @@ let loaded = false;
 void (async () => {
   await window.PDFViewerApplication.initializedPromise;
   await window.PDFViewerApplication.open(config);
-  await window.PDFViewerApplication.pdfViewer.pagesPromise;
   loaded = true;
+  await window.PDFViewerApplication.pdfViewer.pagesPromise;
   const [, hash] = config.url.split("#");
   if (hash) {
     window.PDFViewerApplication.pdfLinkService.setHash(
@@ -74,8 +74,8 @@ window.addEventListener("message", async (event) => {
     case "reload":
       loaded = false;
       await window.PDFViewerApplication.open(config);
-      await window.PDFViewerApplication.pdfViewer.pagesPromise;
       loaded = true;
+      await window.PDFViewerApplication.pdfViewer.pagesPromise;
       window.PDFViewerApplication.pdfViewer.currentPageNumber = Math.min(
         currentPageNumber,
         window.PDFViewerApplication.pdfViewer.pagesCount
