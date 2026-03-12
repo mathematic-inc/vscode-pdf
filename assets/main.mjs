@@ -49,15 +49,9 @@ document.addEventListener(
   true
 );
 
-// Track whether the initial load has completed so that minor post-load
-// runtime errors don't replace the viewer with a crash screen.
-let loaded = false;
-
 void (async () => {
   await window.PDFViewerApplication.initializedPromise;
   await window.PDFViewerApplication.open(config);
-  loaded = true;
-  await window.PDFViewerApplication.pdfViewer.pagesPromise;
   const [, hash] = config.url.split("#");
   if (hash) {
     window.PDFViewerApplication.pdfLinkService.setHash(
@@ -72,9 +66,7 @@ window.addEventListener("message", async (event) => {
     window.PDFViewerApplication.pdfViewer.currentPageNumber;
   switch (event.data.action) {
     case "reload":
-      loaded = false;
       await window.PDFViewerApplication.open(config);
-      loaded = true;
       await window.PDFViewerApplication.pdfViewer.pagesPromise;
       window.PDFViewerApplication.pdfViewer.currentPageNumber = Math.min(
         currentPageNumber,
@@ -85,7 +77,5 @@ window.addEventListener("message", async (event) => {
 });
 
 window.addEventListener("error", (error) => {
-  if (!loaded) {
-    document.body.textContent = `An error occurred (${error.message}) while loading the file. Please open it again.`;
-  }
+  console.error(error);
 });
