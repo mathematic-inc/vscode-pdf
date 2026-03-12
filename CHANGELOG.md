@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.10](https://github.com/mathematic-inc/vscode-pdf/compare/v0.1.9...v0.1.10) (2026-03-12)
+
+
+### Bug Fixes
+
+* Remove error overlay and loaded tracking causing PDF open failures ([#35](https://github.com/mathematic-inc/vscode-pdf/issues/35)) ([053a47f](https://github.com/mathematic-inc/vscode-pdf/commit/053a47f66b4910ed361c17d917cf3f6dd03994c8)), closes [#32](https://github.com/mathematic-inc/vscode-pdf/issues/32)
+
 ## [0.1.9](https://github.com/mathematic-inc/vscode-pdf/compare/v0.1.8...v0.1.9) (2026-03-11)
 
 
