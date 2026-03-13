@@ -137,14 +137,14 @@ const FontInspector = (function FontInspectorClosure() {
       const logIt = document.createElement("a");
       logIt.href = "";
       logIt.textContent = "Log";
-      logIt.addEventListener("click", (event) => {
+      logIt.addEventListener("click", function (event) {
         event.preventDefault();
         console.log(fontObj);
       });
       const select = document.createElement("input");
       select.setAttribute("type", "checkbox");
       select.dataset.fontName = fontName;
-      select.addEventListener("click", () => {
+      select.addEventListener("click", function () {
         selectFont(fontName, select.checked);
       });
       if (download) {
@@ -320,7 +320,7 @@ class Stepper {
       StepperManager.saveBreakPoints(self.pageIndex, self.breakPoints);
     }
 
-    const MAX_OPERATORS_COUNT = 15_000;
+    const MAX_OPERATORS_COUNT = 15000;
     if (this.operatorListIdx > MAX_OPERATORS_COUNT) {
       return;
     }
@@ -398,7 +398,9 @@ class Stepper {
   }
 
   getNextBreakPoint() {
-    this.breakPoints.sort((a, b) => a - b);
+    this.breakPoints.sort(function (a, b) {
+      return a - b;
+    });
     for (const breakPoint of this.breakPoints) {
       if (breakPoint > this.currentIdx) {
         return breakPoint;
@@ -411,7 +413,7 @@ class Stepper {
     StepperManager.selectStepper(this.pageIndex, true);
     this.currentIdx = idx;
 
-    const listener = (evt) => {
+    const listener = evt => {
       switch (evt.keyCode) {
         case 83: // step
           document.removeEventListener("keydown", listener);
@@ -485,7 +487,9 @@ const Stats = (function Stats() {
       statsDiv.textContent = stat.toString();
       wrapper.append(title, statsDiv);
       stats.push({ pageNumber, div: wrapper });
-      stats.sort((a, b) => a.pageNumber - b.pageNumber);
+      stats.sort(function (a, b) {
+        return a.pageNumber - b.pageNumber;
+      });
       clear(this.panel);
       for (const entry of stats) {
         this.panel.append(entry.div);
@@ -508,7 +512,7 @@ class PDFBug {
 
   static enable(ids) {
     const all = ids.length === 1 && ids[0] === "all";
-    const tools = PDFBug.tools;
+    const tools = this.tools;
     for (const tool of tools) {
       if (all || ids.includes(tool.id)) {
         tool.enabled = true;
@@ -516,7 +520,7 @@ class PDFBug {
     }
     if (!all) {
       // Sort the tools by the order they are enabled.
-      tools.sort((a, b) => {
+      tools.sort(function (a, b) {
         let indexA = ids.indexOf(a.id);
         indexA = indexA < 0 ? tools.length : indexA;
         let indexB = ids.indexOf(b.id);
@@ -527,8 +531,8 @@ class PDFBug {
   }
 
   static init(container, ids) {
-    PDFBug.loadCSS();
-    PDFBug.enable(ids);
+    this.loadCSS();
+    this.enable(ids);
     /*
      * Basic Layout:
      * PDFBug
@@ -553,18 +557,18 @@ class PDFBug {
     container.style.right = "var(--panel-width)";
 
     // Initialize all the debugging tools.
-    for (const tool of PDFBug.tools) {
+    for (const tool of this.tools) {
       const panel = document.createElement("div");
       const panelButton = document.createElement("button");
       panelButton.textContent = tool.name;
-      panelButton.addEventListener("click", (event) => {
+      panelButton.addEventListener("click", event => {
         event.preventDefault();
-        PDFBug.selectPanel(tool);
+        this.selectPanel(tool);
       });
       controls.append(panelButton);
       panels.append(panel);
       tool.panel = panel;
-      tool.manager = PDFBug;
+      tool.manager = this;
       if (tool.enabled) {
         tool.init();
       } else {
@@ -572,9 +576,9 @@ class PDFBug {
           `${tool.name} is disabled. To enable add "${tool.id}" to ` +
           "the pdfBug parameter and refresh (separate multiple by commas).";
       }
-      PDFBug.#buttons.push(panelButton);
+      this.#buttons.push(panelButton);
     }
-    PDFBug.selectPanel(0);
+    this.selectPanel(0);
   }
 
   static loadCSS() {
@@ -588,7 +592,7 @@ class PDFBug {
   }
 
   static cleanup() {
-    for (const tool of PDFBug.tools) {
+    for (const tool of this.tools) {
       if (tool.enabled) {
         tool.cleanup();
       }
@@ -597,15 +601,15 @@ class PDFBug {
 
   static selectPanel(index) {
     if (typeof index !== "number") {
-      index = PDFBug.tools.indexOf(index);
+      index = this.tools.indexOf(index);
     }
-    if (index === PDFBug.#activePanel) {
+    if (index === this.#activePanel) {
       return;
     }
-    PDFBug.#activePanel = index;
-    for (const [j, tool] of PDFBug.tools.entries()) {
+    this.#activePanel = index;
+    for (const [j, tool] of this.tools.entries()) {
       const isActive = j === index;
-      PDFBug.#buttons[j].classList.toggle("active", isActive);
+      this.#buttons[j].classList.toggle("active", isActive);
       tool.active = isActive;
       tool.panel.hidden = !isActive;
     }
