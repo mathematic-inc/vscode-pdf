@@ -3,7 +3,7 @@
   "packageManager": "pnpm@10.31.0+sha512.e3927388bfaa8078ceb79b748ffc1e8274e84d75163e67bc22e06c0d3aed43dd153151cbf11d7f8301ff4acb98c68bdc5cadf6989532801ffafe3b3e4a63c268",
   "displayName": "PDF Viewer",
   "description": "Portable document format (PDF) viewer for Visual Studio Code.",
-  "version": "0.1.10",
+  "version": "0.1.11",
   "author": "Mathematic Inc",
   "publisher": "mathematic",
   "repository": {
