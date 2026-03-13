@@ -40,8 +40,12 @@
       "includes": ["assets/main.mjs"],
       "linter": {
         "rules": {
-          "complexity": { "noVoid": "off" },
-          "style": { "useDefaultSwitchClause": "off" }
+          "complexity": {
+            "noVoid": "off"
+          },
+          "style": {
+            "useDefaultSwitchClause": "off"
+          }
         }
       }
     }
