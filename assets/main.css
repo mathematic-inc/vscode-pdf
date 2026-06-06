@@ -17,3 +17,64 @@
 body {
   padding: 0;
 }
+
+/*
+ * Synchronize CSS variables between pdf.js and VS Code
+ */
+:root {
+  --main-color: var(--vscode-breadcrumb-foreground);
+  --body-bg-color: var(--vscode-editor-background);
+
+  --progressBar-color: var(--vscode-welcomePage-progress\.foreground);
+  --progressBar-bg-color: var(--vscode-welcomePage-progress\.background);
+  --progressBar-blend-color: color-mix(
+    in srgb,
+    var(--progressBar-color),
+    var(--progressBar-bg-color)
+  );
+
+  --scrollbar-color: rgb(from var(--vscode-breadcrumb-foreground) r g b / 0.4);
+  --scrollbar-bg-color: transparent;
+
+  --toolbar-icon-bg-color: var(--vscode-icon-foreground);
+  --toolbar-icon-opacity: 100%;
+  --toolbar-icon-hover-bg-color: var(--vscode-icon-foreground);
+
+  --sidebar-narrow-bg-color: rgb(
+    from var(--vscode-sideBar-background) r g b /
+    0.9
+  );
+  --sidebar-toolbar-bg-color: var(--vscode-sideBarSectionHeader-background);
+
+  --toolbar-bg-color: var(--vscode-breadcrumb-background);
+  --toolbar-border-color: var(--vscode-editorWidget-border);
+
+  --button-hover-color: var(--vscode-toolbar-hoverBackground);
+  --toggled-btn-color: var(--toolbar-icon-bg-color);
+  --toggled-btn-bg-color: var(--button-hover-color);
+  --toggled-hover-active-btn-color: var(--vscode-toolbar-activeBackground);
+  --dropdown-btn-bg-color: var(--vscode-dropdown-background);
+  --separator-color: var(--vscode-disabledForeground);
+
+  --field-color: var(--vscode-input-foreground);
+  --field-bg-color: var(--vscode-input-background);
+  --field-border-color: var(--vscode-input-border);
+
+  --treeitem-color: var(--vscode-list-inactiveSelectionForeground);
+  --treeitem-bg-color: var(--vscode-list-inactiveSelectionBackground);
+  --treeitem-hover-color: var(--vscode-list-activeSelectionForeground);
+  --treeitem-selected-color: var(--vscode-list-focusForeground);
+  --treeitem-selected-bg-color: var(--vscode-list-focusBackground);
+
+  --thumbnail-hover-color: var(--vscode-list-activeSelectionBackground);
+  --thumbnail-selected-color: var(--vscode-list-focusBackground);
+
+  --doorhanger-bg-color: var(--vscode-menu-background);
+  --doorhanger-border-color: var(--toolbar-border-color);
+  --doorhanger-hover-color: var(--vscode-menu-selectionForeground);
+  --doorhanger-hover-bg-color: var(--vscode-menu-selectionBackground);
+  --doorhanger-separator-color: var(--vscode-menu-separatorBackground);
+
+  --dialog-button-bg-color: var(--vscode-quickInput-background);
+  --dialog-button-hover-bg-color: var(--vscode-quickInputList-focusBackground);
+}
