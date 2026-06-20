@@ -25,6 +25,45 @@ function loadConfig() {
 }
 
 const config = loadConfig();
+let updateNavigationHistory;
+
+function setupNavigationHistory() {
+  const application = window.PDFViewerApplication;
+  const history = application.pdfHistory;
+  const findButtonContainer =
+    document.getElementById("viewFindButton")?.parentElement;
+
+  if (!(history && findButtonContainer)) {
+    return;
+  }
+
+  const container = document.createElement("div");
+  container.className = "toolbarHorizontalGroup hiddenSmallView";
+  container.innerHTML = `
+    <button id="navigateBack" class="toolbarButton" type="button" disabled title="Go Back" aria-label="Go Back">
+      <span>Go Back</span>
+    </button>
+    <div class="splitToolbarButtonSeparator"></div>
+    <button id="navigateForward" class="toolbarButton" type="button" disabled title="Go Forward" aria-label="Go Forward">
+      <span>Go Forward</span>
+    </button>`;
+  findButtonContainer.after(container);
+
+  const backButton = document.getElementById("navigateBack");
+  const forwardButton = document.getElementById("navigateForward");
+  const updateButtons = () => {
+    backButton.disabled = !history.canGoBack;
+    forwardButton.disabled = !history.canGoForward;
+  };
+
+  backButton.addEventListener("click", () => history.back());
+  forwardButton.addEventListener("click", () => history.forward());
+  window.addEventListener("popstate", () => queueMicrotask(updateButtons));
+  application.eventBus.on("updateviewarea", updateButtons);
+
+  updateButtons();
+  return updateButtons;
+}
 
 PDFViewerApplicationOptions.set("defaultUrl", "");
 PDFViewerApplicationOptions.set("disablePreferences", true);
@@ -51,7 +90,9 @@ document.addEventListener(
 
 void (async () => {
   await window.PDFViewerApplication.initializedPromise;
+  updateNavigationHistory = setupNavigationHistory();
   await window.PDFViewerApplication.open(config);
+  updateNavigationHistory?.();
   const [, hash] = config.url.split("#");
   if (hash) {
     window.PDFViewerApplication.pdfLinkService.setHash(
@@ -72,6 +113,7 @@ window.addEventListener("message", async (event) => {
         currentPageNumber,
         window.PDFViewerApplication.pdfViewer.pagesCount
       );
+      updateNavigationHistory?.();
       break;
   }
 });
