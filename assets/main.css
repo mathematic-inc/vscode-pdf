@@ -17,3 +17,13 @@
 body {
   padding: 0;
 }
+
+#navigateBack::before {
+  -webkit-mask-image: url("navigation-back.svg");
+  mask-image: url("navigation-back.svg");
+}
+
+#navigateForward::before {
+  -webkit-mask-image: url("navigation-forward.svg");
+  mask-image: url("navigation-forward.svg");
+}

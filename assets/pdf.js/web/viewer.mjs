@@ -6373,6 +6373,14 @@ class PDFHistory {
       window.history.forward();
     }
   }
+  get canGoBack() {
+    const state = window.history.state;
+    return this._initialized && !this._popStateInProgress && this.#isValidState(state) && state.uid > 0;
+  }
+  get canGoForward() {
+    const state = window.history.state;
+    return this._initialized && !this._popStateInProgress && this.#isValidState(state) && state.uid < this._maxUid;
+  }
   get popStateInProgress() {
     return this._initialized && (this._popStateInProgress || this._blockHashChange > 0);
   }
@@ -6400,6 +6408,7 @@ class PDFHistory {
     if (shouldReplace) {
       window.history.replaceState(newState, "", newUrl);
     } else {
+      this._maxUid = newState.uid;
       window.history.pushState(newState, "", newUrl);
     }
   }
@@ -13429,7 +13438,7 @@ const PDFViewerApplication = {
       });
       pdfRenderingQueue.setThumbnailViewer(this.pdfThumbnailViewer);
     }
-    if (!this.isViewerEmbedded && !AppOptions.get("disableHistory")) {
+    if (!AppOptions.get("disableHistory")) {
       this.pdfHistory = new PDFHistory({
         linkService: pdfLinkService,
         eventBus
