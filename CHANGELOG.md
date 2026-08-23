@@ -5,6 +5,29 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.12](https://github.com/mathematic-inc/vscode-pdf/compare/v0.1.11...v0.1.12) (2026-08-23)
+
+
+### Features
+
+* Add support for opening relative links to other PDFs ([#9](https://github.com/mathematic-inc/vscode-pdf/issues/9)) ([d9abc8f](https://github.com/mathematic-inc/vscode-pdf/commit/d9abc8fa53f42e2565f66a217e7c402ae07f6104))
+* Default zoom, sidebar, Ctrl+P, and drag crash fixes ([#30](https://github.com/mathematic-inc/vscode-pdf/issues/30)) ([0a01b8b](https://github.com/mathematic-inc/vscode-pdf/commit/0a01b8b35f7a77cc3d7f56d251bc06cc747bfdd7))
+* Modernize tooling and project structure ([#26](https://github.com/mathematic-inc/vscode-pdf/issues/26)) ([bc9845b](https://github.com/mathematic-inc/vscode-pdf/commit/bc9845b1728046f82ee19afb988db9a32b22e26c))
+* Update PDF.js to 4.10.38 ([af2026e](https://github.com/mathematic-inc/vscode-pdf/commit/af2026e5d639f2fd12cdc0bba1c513e9028ae42c))
+
+
+### Bug Fixes
+
+* Add better error handling ([1ccb135](https://github.com/mathematic-inc/vscode-pdf/commit/1ccb135bd591712e06af4de1ade10ded2657797a))
+* Remove error overlay and loaded tracking causing PDF open failures ([#35](https://github.com/mathematic-inc/vscode-pdf/issues/35)) ([93b2ca9](https://github.com/mathematic-inc/vscode-pdf/commit/93b2ca962a84342cdcf6f00a7d87015b1e28934e)), closes [#32](https://github.com/mathematic-inc/vscode-pdf/issues/32)
+* Remove worker src ([214015e](https://github.com/mathematic-inc/vscode-pdf/commit/214015e5df474fb557abf7c5bc00fef3e77b7194))
+* Resolve VSIX glob path before publishing extension ([#28](https://github.com/mathematic-inc/vscode-pdf/issues/28)) ([54d5272](https://github.com/mathematic-inc/vscode-pdf/commit/54d5272630d89e05bd574d93a6a04cadccaf2956))
+* Set loaded=true after open() to prevent overlay manager crash on load ([#33](https://github.com/mathematic-inc/vscode-pdf/issues/33)) ([2073045](https://github.com/mathematic-inc/vscode-pdf/commit/20730456855bff41061a9770305ba307ab7407b9))
+* **thumbnails:** Adapt csp to fix thumbnails ([a581b72](https://github.com/mathematic-inc/vscode-pdf/commit/a581b72446c00a1f9cfbf18a2a918b984999d80a))
+* **thumbnails:** Adapt csp to fix thumbnails ([#3](https://github.com/mathematic-inc/vscode-pdf/issues/3)) ([7795c28](https://github.com/mathematic-inc/vscode-pdf/commit/7795c28d0e767d78a2482eefa788ee7d29683c2e))
+* Update engine ([1f07162](https://github.com/mathematic-inc/vscode-pdf/commit/1f071628f8fbd3d119000ba9c8d99a426706f4b6))
+* Update pdf.js to fix viewer initialization errors ([#37](https://github.com/mathematic-inc/vscode-pdf/issues/37)) ([7934a12](https://github.com/mathematic-inc/vscode-pdf/commit/7934a122f124165f182d39e90e5ad35550c5ffce)), closes [#32](https://github.com/mathematic-inc/vscode-pdf/issues/32)
+
 ## [0.1.11](https://github.com/mathematic-inc/vscode-pdf/compare/v0.1.10...v0.1.11) (2026-03-13)
 
 
