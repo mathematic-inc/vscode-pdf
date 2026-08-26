@@ -17,7 +17,7 @@
 import type * as vscode from "vscode";
 
 export function disposeAll(disposables: vscode.Disposable[]): void {
-  while (disposables.length) {
+  while (disposables.length > 0) {
     const item = disposables.pop();
     if (item) {
       item.dispose();

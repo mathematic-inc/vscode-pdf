@@ -17,9 +17,9 @@
 import { PDFViewerApplicationOptions } from "./pdf.js/web/viewer.mjs";
 
 function loadConfig() {
-  const elem = document.getElementById("pdf-view-config");
+  const elem = document.querySelector("#pdf-view-config");
   if (elem) {
-    return JSON.parse(elem.getAttribute("data-config"));
+    return JSON.parse(elem.dataset.config);
   }
   throw new Error("Could not load configuration.");
 }
@@ -28,14 +28,15 @@ const config = loadConfig();
 
 PDFViewerApplicationOptions.set("defaultUrl", "");
 PDFViewerApplicationOptions.set("disablePreferences", true);
-PDFViewerApplicationOptions.set(
-  "defaultZoomValue",
-  config.defaultZoomValue ?? "auto"
-);
-PDFViewerApplicationOptions.set(
-  "sidebarViewOnLoad",
-  config.sidebarViewOnLoad ?? 0
-);
+PDFViewerApplicationOptions.set("defaultZoomValue", config.defaultZoomValue ?? "auto");
+PDFViewerApplicationOptions.set("sidebarViewOnLoad", config.sidebarViewOnLoad ?? 0);
+PDFViewerApplicationOptions.set("workerSrc", config.workerSrc);
+PDFViewerApplicationOptions.set("sandboxBundleSrc", config.sandboxBundleSrc);
+PDFViewerApplicationOptions.set("cMapUrl", config.cMapUrl);
+PDFViewerApplicationOptions.set("iccUrl", config.iccUrl);
+PDFViewerApplicationOptions.set("standardFontDataUrl", config.standardFontDataUrl);
+PDFViewerApplicationOptions.set("wasmUrl", config.wasmUrl);
+PDFViewerApplicationOptions.set("imageResourcesPath", config.imageResourcesPath);
 
 // Prevent pdf.js from intercepting Ctrl+P/Cmd+P and triggering the print dialog.
 document.addEventListener(
@@ -46,7 +47,7 @@ document.addEventListener(
       e.stopImmediatePropagation();
     }
   },
-  true
+  true,
 );
 
 void (async () => {
@@ -54,23 +55,20 @@ void (async () => {
   await window.PDFViewerApplication.open(config);
   const [, hash] = config.url.split("#");
   if (hash) {
-    window.PDFViewerApplication.pdfLinkService.setHash(
-      decodeURIComponent(hash)
-    );
+    window.PDFViewerApplication.pdfLinkService.setHash(decodeURIComponent(hash));
   }
 })();
 
 window.addEventListener("message", async (event) => {
   await window.PDFViewerApplication.initializedPromise;
-  const currentPageNumber =
-    window.PDFViewerApplication.pdfViewer.currentPageNumber;
+  const currentPageNumber = window.PDFViewerApplication.pdfViewer.currentPageNumber;
   switch (event.data.action) {
     case "reload":
       await window.PDFViewerApplication.open(config);
       await window.PDFViewerApplication.pdfViewer.pagesPromise;
       window.PDFViewerApplication.pdfViewer.currentPageNumber = Math.min(
         currentPageNumber,
-        window.PDFViewerApplication.pdfViewer.pagesCount
+        window.PDFViewerApplication.pdfViewer.pagesCount,
       );
       break;
   }

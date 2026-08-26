@@ -15,6 +15,7 @@
  */
 
 import type { ExtensionContext } from "vscode";
+
 import { PDFViewerProvider } from "./pdf-viewer-provider";
 
 export function activate(context: ExtensionContext): void {

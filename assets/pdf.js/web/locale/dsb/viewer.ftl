@@ -112,14 +112,6 @@ pdfjs-document-properties-size-kb = { NUMBER($kb, maximumSignificantDigits: 3) }
 #   $mb (Number) - the PDF file size in megabytes
 #   $b (Number) - the PDF file size in bytes
 pdfjs-document-properties-size-mb = { NUMBER($mb, maximumSignificantDigits: 3) } MB ({ $b } bajtow)
-# Variables:
-#   $size_kb (Number) - the PDF file size in kilobytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-kb = { $size_kb } KB ({ $size_b } bajtow)
-# Variables:
-#   $size_mb (Number) - the PDF file size in megabytes
-#   $size_b (Number) - the PDF file size in bytes
-pdfjs-document-properties-mb = { $size_mb } MB ({ $size_b } bajtow)
 pdfjs-document-properties-title = Titel:
 pdfjs-document-properties-author = Awtor:
 pdfjs-document-properties-subject = Tema:
@@ -129,10 +121,6 @@ pdfjs-document-properties-modification-date = Datum změny:
 # Variables:
 #   $dateObj (Date) - the creation/modification date and time of the PDF file
 pdfjs-document-properties-date-time-string = { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
-# Variables:
-#   $date (Date) - the creation/modification date of the PDF file
-#   $time (Time) - the creation/modification time of the PDF file
-pdfjs-document-properties-date-string = { $date }, { $time }
 pdfjs-document-properties-creator = Awtor:
 pdfjs-document-properties-producer = PDF-gótowaŕ:
 pdfjs-document-properties-version = PDF-wersija:
@@ -165,6 +153,29 @@ pdfjs-document-properties-linearized = Fast Web View:
 pdfjs-document-properties-linearized-yes = Jo
 pdfjs-document-properties-linearized-no = Ně
 pdfjs-document-properties-close-button = Zacyniś
+pdfjs-digital-signature-properties-view-certificate = Certifikat pokazaś
+# Shown beneath an invalid signature card to explain why verification
+# failed. The text comes from NSS (e.g. "Signature integrity has been
+# compromised", "PKCS#7 signature could not be parsed") and is not
+# itself localized — it is the underlying error message produced by
+# the verification backend.
+# Variables:
+#   $reason (String) - error message describing why the signature
+#                      could not be verified.
+pdfjs-digital-signature-properties-reason = Pśicyna: { $reason }
+# Variables:
+#   $dateObj (Date) - the signing time from the /Sig dict's /M entry.
+pdfjs-digital-signature-properties-timestamp = Casowy kołk: { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
+# Variables:
+#   $count (Number) - number of nested sub-signatures (one per earlier
+#                     incremental revision of the document).
+pdfjs-digital-signature-properties-sub-signatures =
+    { $count ->
+        [one] { $count } pódsignatura
+        [two] { $count } pódsignaturje
+        [few] { $count } pódsignatury
+       *[other] { $count } pódsignaturow
+    }
 
 ## Print
 
@@ -179,10 +190,10 @@ pdfjs-printing-not-ready = Warnowanje: PDF njejo se za śišćanje dopołnje zac
 ## Tooltips and alt text for side panel toolbar buttons
 
 pdfjs-toggle-sidebar-button =
-    .title = Bócnicu pokazaś/schowaś
+    .title = Bocnicu pokazaś/schowaś
 pdfjs-toggle-sidebar-notification-button =
     .title = Bocnicu pśešaltowaś (dokument rozrědowanje/pśipiski/warstwy wopśimujo)
-pdfjs-toggle-sidebar-button-label = Bócnicu pokazaś/schowaś
+pdfjs-toggle-sidebar-button-label = Bocnicu pokazaś/schowaś
 pdfjs-document-outline-button =
     .title = Dokumentowe naraźenje pokazaś (dwójne kliknjenje, aby se wšykne zapiski pokazali/schowali)
 pdfjs-document-outline-button-label = Dokumentowa struktura
@@ -213,6 +224,15 @@ pdfjs-thumb-page-title =
 #   $page (Number) - the page number
 pdfjs-thumb-page-canvas =
     .aria-label = Miniatura boka { $page }
+# Variables:
+#   $page (Number) - the page number
+pdfjs-thumb-page-checkbox1 =
+    .title = Bok { $page } wubraś
+# Variables:
+#   $page (Number) - the page number
+#   $total (Number) - the number of pages
+pdfjs-thumb-page-title1 =
+    .title = Bok { $page } z { $total }
 
 ## Find panel button title and messages
 
@@ -279,10 +299,6 @@ pdfjs-rendering-error = Pśi zwobraznjanju boka jo zmólka nastała.
 
 ## Annotations
 
-# Variables:
-#   $date (Date) - the modification date of the annotation
-#   $time (Time) - the modification time of the annotation
-pdfjs-annotation-date-string = { $date }, { $time }
 # .alt: This is used as a tooltip.
 # Variables:
 #   $type (String) - an annotation type from a list defined in the PDF spec
@@ -306,9 +322,13 @@ pdfjs-web-fonts-disabled = Webpisma su znjemóžnjone: njejo móžno, zasajźone
 
 pdfjs-editor-free-text-button =
     .title = Tekst
+pdfjs-editor-color-picker-free-text-input =
+    .title = Tekstowu barwu změniś
 pdfjs-editor-free-text-button-label = Tekst
 pdfjs-editor-ink-button =
     .title = Kresliś
+pdfjs-editor-color-picker-ink-input =
+    .title = Kresleńsku barwu změniś
 pdfjs-editor-ink-button-label = Kresliś
 pdfjs-editor-stamp-button =
     .title = Wobraze pśidaś abo wobźěłaś
@@ -320,6 +340,33 @@ pdfjs-highlight-floating-button1 =
     .title = Wuzwignuś
     .aria-label = Wuzwignuś
 pdfjs-highlight-floating-button-label = Wuzwignuś
+pdfjs-comment-floating-button =
+    .title = Komentěrowaś
+    .aria-label = Komentěrowaś
+pdfjs-comment-floating-button-label = Komentěrowaś
+pdfjs-editor-comment-button =
+    .title = Komentěrowaś
+    .aria-label = Komentěrowaś
+pdfjs-editor-comment-button-label = Komentar
+pdfjs-editor-signature-button =
+    .title = Signaturu pśidaś
+pdfjs-editor-signature-button-label = Signaturu pśidaś
+
+## Default editor aria labels
+
+# “Highlight” is a noun, the string is used on the editor for highlights.
+pdfjs-editor-highlight-editor =
+    .aria-label = Editor wuzwignjenja
+# “Drawing” is a noun, the string is used on the editor for drawings.
+pdfjs-editor-ink-editor =
+    .aria-label = Kresleński editor
+# Used when a signature editor is selected/hovered.
+# Variables:
+#   $description (String) - a string describing/labeling the signature.
+pdfjs-editor-signature-editor1 =
+    .aria-description = Signaturowy editor: { $description }
+pdfjs-editor-stamp-editor =
+    .aria-label = Wobrazowy editor
 
 ## Remove button for the various kind of editor.
 
@@ -331,6 +378,8 @@ pdfjs-editor-remove-stamp-button =
     .title = Wobraz wótwónoźeś
 pdfjs-editor-remove-highlight-button =
     .title = Wuzwignjenje wótpóraś
+pdfjs-editor-remove-signature-button =
+    .title = Signaturu wótwónoźeś
 
 ##
 
@@ -347,24 +396,43 @@ pdfjs-editor-stamp-add-image-button-label = Wobraz pśidaś
 pdfjs-editor-free-highlight-thickness-input = Tłustosć
 pdfjs-editor-free-highlight-thickness-title =
     .title = Tłustosć změniś, gaž se zapiski wuzwiguju, kótarež tekst njejsu
+pdfjs-editor-add-signature-container =
+    .aria-label = Wóźeńske elementy signaturow a skłaźone signatury
+pdfjs-editor-signature-add-signature-button =
+    .title = Nowu signaturu pśidaś
+pdfjs-editor-signature-add-signature-button-label = Nowu signaturu pśidaś
+# Used on the button to use an already saved signature.
+# Variables:
+#   $description (String) - a string describing/labeling the signature.
+pdfjs-editor-add-saved-signature-button =
+    .title = Skłaźona signatura: { $description }
 # .default-content is used as a placeholder in an empty text editor.
 pdfjs-free-text2 =
     .aria-label = Tekstowy editor
     .default-content = Zachopśo pisaś …
-pdfjs-free-text =
-    .aria-label = Tekstowy editor
-pdfjs-free-text-default-content = Zachopśo pisaś…
-pdfjs-ink =
-    .aria-label = Kresleński editor
-pdfjs-ink-canvas =
-    .aria-label = Wobraz napórany wót wužywarja
+# Used to show how many comments are present in the pdf file.
+# Variables:
+#   $count (Number) - the number of comments.
+pdfjs-editor-comments-sidebar-title =
+    { $count ->
+        [one] { $count } komentar
+        [two] { $count } komentara
+        [few] { $count } komentary
+       *[other] { $count } komentarow
+    }
+pdfjs-editor-comments-sidebar-close-button =
+    .title = Bocnicu zacyniś
+    .aria-label = Bocnicu zacyniś
+pdfjs-editor-comments-sidebar-close-button-label = Bocnicu zacyniś
+# Instructional copy to add a comment by selecting text or an annotations.
+pdfjs-editor-comments-sidebar-no-comments1 = Wiźiśo něco wobspomnjeśa gódnego? Wuzwigniśo to a zawóstajśo komentar.
+pdfjs-editor-comments-sidebar-no-comments-link = Dalšne informacije
 
 ## Alt-text dialog
 
 pdfjs-editor-alt-text-button-label = Alternatiwny tekst
 pdfjs-editor-alt-text-edit-button =
     .aria-label = Alternatiwny tekst wobźěłaś
-pdfjs-editor-alt-text-edit-button-label = Alternatiwny tekst wobźěłaś
 pdfjs-editor-alt-text-dialog-label = Nastajenje wubraś
 pdfjs-editor-alt-text-dialog-description = Alternatiwny tekst pomaga, gaž luźe njamógu wobraz wiźeś abo gaž se wobraz njezacytajo.
 pdfjs-editor-alt-text-add-description-label = Wopisanje pśidaś
@@ -384,14 +452,6 @@ pdfjs-editor-alt-text-button =
 ## Editor resizers
 ## This is used in an aria label to help to understand the role of the resizer.
 
-pdfjs-editor-resizer-label-top-left = Górjejce nalěwo – wjelikosć změniś
-pdfjs-editor-resizer-label-top-middle = Górjejce wesrjejź – wjelikosć změniś
-pdfjs-editor-resizer-label-top-right = Górjejce napšawo – wjelikosć změniś
-pdfjs-editor-resizer-label-middle-right = Wesrjejź napšawo – wjelikosć změniś
-pdfjs-editor-resizer-label-bottom-right = Dołojce napšawo – wjelikosć změniś
-pdfjs-editor-resizer-label-bottom-middle = Dołojce wesrjejź – wjelikosć změniś
-pdfjs-editor-resizer-label-bottom-left = Dołojce nalěwo – wjelikosć změniś
-pdfjs-editor-resizer-label-middle-left = Wesrjejź nalěwo – wjelikosć změniś
 pdfjs-editor-resizer-top-left =
     .aria-label = Górjejce nalěwo – wjelikosć změniś
 pdfjs-editor-resizer-top-middle =
@@ -457,7 +517,6 @@ pdfjs-editor-new-alt-text-error-close-button = Zacyniś
 # Variables:
 #   $totalSize (Number) - the total size (in MB) of the AI model.
 #   $downloadedSize (Number) - the downloaded size (in MB) of the AI model.
-#   $percent (Number) - the percentage of the downloaded size.
 pdfjs-editor-new-alt-text-ai-model-downloading-progress = Model KI za alternatiwny tekst se ześěgujo ({ $downloadedSize } z { $totalSize } MB)
     .aria-valuetext = Model KI za alternatiwny tekst se ześěgujo ({ $downloadedSize } z { $totalSize } MB)
 # This is a button that users can click to edit the alt text they have already added.
@@ -498,12 +557,22 @@ pdfjs-editor-alt-text-settings-show-dialog-button-label = Editor alternatiwnego 
 pdfjs-editor-alt-text-settings-show-dialog-description = Pomaga, wam wšym swójim wobrazam alternatiwny tekst pśidaś.
 pdfjs-editor-alt-text-settings-close-button = Zacyniś
 
+## Accessibility labels (announced by screen readers) for objects added to the editor.
+
+pdfjs-editor-highlight-added-alert = Wuzwignjenje pśidane
+pdfjs-editor-freetext-added-alert = Tekst pśidany
+pdfjs-editor-ink-added-alert = Kreslanka pśidana
+pdfjs-editor-stamp-added-alert = Wobraz pśidany
+pdfjs-editor-signature-added-alert = Signatura pśidana
+
 ## "Annotations removed" bar
 
 pdfjs-editor-undo-bar-message-highlight = Wótwónoźone wuzwignuś
 pdfjs-editor-undo-bar-message-freetext = Tekst jo se wótwónoźeł
 pdfjs-editor-undo-bar-message-ink = Kreslanka jo se wótwónoźeła
 pdfjs-editor-undo-bar-message-stamp = Wobraz jo se wótwónoźeł
+pdfjs-editor-undo-bar-message-signature = Signatura jo se wótwónoźeła
+pdfjs-editor-undo-bar-message-comment = Komentar jo se wótwónoźeł
 # Variables:
 #   $count (Number) - the number of removed annotations.
 pdfjs-editor-undo-bar-message-multiple =
@@ -519,3 +588,277 @@ pdfjs-editor-undo-bar-undo-button-label = Anulěrowaś
 pdfjs-editor-undo-bar-close-button =
     .title = Zacyniś
 pdfjs-editor-undo-bar-close-button-label = Zacyniś
+
+## Add a signature dialog
+
+pdfjs-editor-add-signature-dialog-label = Toś ten modalny dialog wužywarjeju zmóžnja, signaturu napóraś, aby PDF-dokument pśidał. Wužywaŕ móžo mě wobźěłaś (kótarež teke ako alternatiwny tekst słužy) a pó žycenju signaturu za wóspjetne wužywanje składowaś.
+pdfjs-editor-add-signature-dialog-title = Signaturu pśidaś
+
+## Tab names
+
+# Type is a verb (you can type your name as signature)
+pdfjs-editor-add-signature-type-button = Typ
+    .title = Typ
+# Draw is a verb (you can draw your signature)
+pdfjs-editor-add-signature-draw-button = Kresliś
+    .title = Kresliś
+pdfjs-editor-add-signature-image-button = Wobraz
+    .title = Wobraz
+
+## Tab panels
+
+pdfjs-editor-add-signature-type-input =
+    .aria-label = Zapódajśo swóju signaturu
+    .placeholder = Zapódajśo swóju signaturu
+pdfjs-editor-add-signature-draw-placeholder = Kresliśo swóju signaturu
+pdfjs-editor-add-signature-draw-thickness-range-label = Tłustosć
+# Variables:
+#   $thickness (Number) - the thickness (in pixels) of the line used to draw a signature.
+pdfjs-editor-add-signature-draw-thickness-range =
+    .title = Tłustosć kreslanki: { $thickness }
+pdfjs-editor-add-signature-image-placeholder = Śěgniśo dataju sem, aby ju nagrał
+pdfjs-editor-add-signature-image-browse-link =
+    { PLATFORM() ->
+        [macos] Abo wubjeŕśo wobrazowe dataje
+       *[other] Abo pśepytajśo wobrazowe dataje
+    }
+
+## Controls
+
+pdfjs-editor-add-signature-description-label = Wopisanje (alternatiwny tekst)
+pdfjs-editor-add-signature-description-input =
+    .title = Wopisanje (alternatiwny tekst)
+pdfjs-editor-add-signature-description-default-when-drawing = Signatura
+pdfjs-editor-add-signature-clear-button-label = Signaturu lašowaś
+pdfjs-editor-add-signature-clear-button =
+    .title = Signaturu lašowaś
+pdfjs-editor-add-signature-save-checkbox = Signaturu składowaś
+pdfjs-editor-add-signature-save-warning-message = Sćo dojśpił limit 5 skłaźonych signaturow. Wótwónoźćo jadnu, aby wěcej składował.
+pdfjs-editor-add-signature-image-upload-error-title = Wobraz njedajo se nagraś
+pdfjs-editor-add-signature-image-upload-error-description = Pśeglědajśo swój seśowy zwisk abo wopytajśo drugi wobraz.
+pdfjs-editor-add-signature-image-no-data-error-title = Toś ten wobraz njedajo se do signatury pśetwóriś
+pdfjs-editor-add-signature-image-no-data-error-description = Wopytajśo pšosym drugi wobraz nagraś.
+pdfjs-editor-add-signature-error-close-button = Zacyniś
+
+## Dialog buttons
+
+pdfjs-editor-add-signature-cancel-button = Pśetergnuś
+pdfjs-editor-add-signature-add-button = Pśidaś
+pdfjs-editor-edit-signature-update-button = Aktualizěrowaś
+
+## Comment popup
+
+pdfjs-editor-edit-comment-popup-button-label = Komentar wobźěłaś
+pdfjs-editor-edit-comment-popup-button =
+    .title = Komentar wobźěłaś
+pdfjs-editor-delete-comment-popup-button-label = Komentar wótwónoźeś
+pdfjs-editor-delete-comment-popup-button =
+    .title = Komentar wótwónoźeś
+pdfjs-show-comment-button =
+    .title = Komentar pokazaś
+
+##  Edit a comment dialog
+
+# An existing comment is edited
+pdfjs-editor-edit-comment-dialog-title-when-editing = Komentar wobźěłaś
+pdfjs-editor-edit-comment-dialog-save-button-when-editing = Aktualizěrowaś
+# No existing comment
+pdfjs-editor-edit-comment-dialog-title-when-adding = Komentar pśidaś
+pdfjs-editor-edit-comment-dialog-save-button-when-adding = Pśidaś
+pdfjs-editor-edit-comment-dialog-text-input =
+    .placeholder = Zachopśo pisaś…
+pdfjs-editor-edit-comment-dialog-cancel-button = Pśetergnuś
+
+## Edit a comment button in the editor toolbar
+
+pdfjs-editor-add-comment-button =
+    .title = Komentar pśidaś
+
+## The view manager is a sidebar displaying different views:
+##  - thumbnails;
+##  - outline;
+##  - attachments;
+##  - layers.
+## The thumbnails view is used to edit the pdf: remove/insert pages, ...
+
+pdfjs-toggle-views-manager-notification-button =
+    .title = Bocnicu pśešaltowaś (dokument miniatury/rozrědowanje/pśipiski/warstwy wopśimujo)
+pdfjs-toggle-views-manager-button1-label = Boki zastojaś
+pdfjs-views-manager-sidebar =
+    .aria-label = Bocnica
+pdfjs-views-manager-sidebar-resizer =
+    .aria-label = Pśiměrjenje wjelikosći bocnice
+pdfjs-views-manager-view-selector-button =
+    .title = Naglědy
+pdfjs-views-manager-view-selector-button-label = Naglědy
+pdfjs-views-manager-pages-title = Boki
+pdfjs-views-manager-outlines-title1 = Dokumentowa struktura
+    .title = Dokumentowa struktura (klikniśo dwójcy, aby wšykne zapiski pokazał/schował)
+pdfjs-views-manager-attachments-title = Pśidanki
+pdfjs-views-manager-layers-title1 = Rowniny
+    .title = Rowniny (klikniśo dwójcy, aby wšykne rowniny na standardny status slědk stajił)
+pdfjs-views-manager-pages-option-label = Boki
+pdfjs-views-manager-outlines-option-label = Dokumentowa struktura
+pdfjs-views-manager-attachments-option-label = Pśidanki
+pdfjs-views-manager-layers-option-label = Rowniny
+pdfjs-views-manager-add-file-button =
+    .title = Dataju pśidaś
+pdfjs-views-manager-add-file-button-label = Dataju pśidaś
+# Variables:
+#   $count (Number) - the number of selected pages.
+pdfjs-views-manager-pages-status-action-label =
+    { $count ->
+        [one] { $count } wubrany
+        [two] { $count } wubranej
+        [few] { $count } wubrane
+       *[other] { $count } wubrane
+    }
+pdfjs-views-manager-pages-status-none-action-label = Boki wubraś
+pdfjs-views-manager-pages-status-action-button-label = Zastojaś
+pdfjs-views-manager-pages-status-copy-button-label = Kopěrowaś
+pdfjs-views-manager-pages-status-cut-button-label = Wurězaś
+pdfjs-views-manager-pages-status-delete-button-label = Lašowaś
+pdfjs-views-manager-pages-status-export-selected-button-label = Wubrane eksportěrowaś…
+# Variables:
+#   $count (Number) - the number of selected pages to be cut.
+pdfjs-views-manager-status-undo-cut-label =
+    { $count ->
+        [one] { $count } bok wurězany
+        [two] { $count } boka wurězanej
+        [few] { $count } boki wurězane
+       *[other] { $count } bokow wurězane
+    }
+# Variables:
+#   $count (Number) - the number of selected pages to be copied.
+pdfjs-views-manager-pages-status-undo-copy-label =
+    { $count ->
+        [one] { $count } bok kopěrowany
+        [two] { $count } boka kopěrowanej
+        [few] { $count } boki kopěrowane
+       *[other] { $count } bokow kopěrowane
+    }
+# Variables:
+#   $count (Number) - the number of selected pages to be deleted.
+pdfjs-views-manager-pages-status-undo-delete-label =
+    { $count ->
+        [one] { $count } bok wulašowany
+        [two] { $count } boka wulašowanej
+        [few] { $count } boki wulašowane
+       *[other] { $count } bokow wulašowane
+    }
+pdfjs-views-manager-pages-status-waiting-ready-label = Waša dataja se pśigótujo…
+pdfjs-views-manager-pages-status-waiting-uploading-label = Dataja se nagrawa…
+pdfjs-views-manager-status-warning-cut-label = Njedajo se wurězaś. Aktualizěrujśo bok a wopytajśo hyšći raz.
+pdfjs-views-manager-status-warning-copy-label = Njedajo se kopěrowaś. Aktualizěrujśo bok a wopytajśo hyšći raz.
+pdfjs-views-manager-status-warning-delete-label = Njedajo se lašowaś. Aktualizěrujśo bok a wopytajśo hyšći raz.
+pdfjs-views-manager-status-warning-save-label = Njedajo se składowaś. Aktualizěrujśo bok a wopytajśo hyšći raz.
+pdfjs-views-manager-status-undo-button-label = Anulěrowaś
+pdfjs-views-manager-status-done-button-label = Dokóńcony
+pdfjs-views-manager-status-close-button =
+    .title = Zacyniś
+pdfjs-views-manager-status-close-button-label = Zacyniś
+pdfjs-views-manager-paste-button-label = Zasajźiś
+pdfjs-views-manager-paste-button-before =
+    .title = Pśed prědnym bokom zasajźiś
+# Variables:
+#   $page (Number) - the page number after which the paste button is.
+pdfjs-views-manager-paste-button-after =
+    .title = Za bokom { $page } zasajźiś
+# Badge used to promote a new feature in the UI, keep it as short as possible.
+# It's spelled uppercase for English, but it can be translated as usual.
+pdfjs-new-badge-content = NOWY
+pdfjs-views-manager-waiting-for-file = Dataja se nagrawa…
+pdfjs-toggle-views-manager-button1 =
+    .title = Boki zastojaś
+
+## Digital signature properties (signature verification panel)
+
+pdfjs-digital-signature-properties-button =
+    .title = Kakosći digitalneje signatury
+    .aria-label = Kakosći digitalneje signatury
+pdfjs-digital-signature-properties-button-label = Kakosći digitalneje signatury
+
+## Banner shown above the signature list summarising the overall
+## verification state of the document. Each variant is selected by the
+## viewer based on the worst per-signature status; one signature is
+## enough to lower the banner.
+##
+## Variables:
+##   $count (Number) - number of signatures at the worst level.
+
+pdfjs-digital-signature-properties-banner-verified = Dokument jo se signěrował z płaśiweju digitalneju signaturu
+pdfjs-digital-signature-properties-banner-unknown =
+    { $count ->
+        [one] Dokument jo se signěrował, ale { $count } digitalna signatura njedajo se wobkšuśiś
+        [two] Dokument jo se signěrował, ale { $count } digitalnej signaturje njedajotej se wobkšuśiś
+        [few] Dokument jo se signěrował, ale { $count } digitalne signatury njedaju se wobkšuśiś
+       *[other] Dokument jo se signěrował, ale { $count } digitalnych signaturow njedajo se wobkšuśiś
+    }
+pdfjs-digital-signature-properties-banner-untrusted =
+    { $count ->
+        [one] Dokument jo z { $count } certifikatom signěrowany, kótaryž njejo dowěry gódny
+        [two] Dokument jo z { $count } certifikatoma signěrowany, kótarejž njejstej dowěry gódnej
+        [few] Dokument jo z { $count } certifikatami signěrowany, kótarež njejsu dowěry gódne
+       *[other] Dokument jo z { $count } certifikatami signěrowany, kótarež njejsu dowěry gódne
+    }
+pdfjs-digital-signature-properties-banner-expired =
+    { $count ->
+        [one] Dokument jo z { $count } spadnjonym certifikatom signěrowany
+        [two] Dokument jo z { $count } spadnjonyma certifikatoma signěrowany
+        [few] Dokument jo z { $count } spadnjonymi certifikatami signěrowany
+       *[other] Dokument jo z { $count } spadnjonymi certifikatami signěrowany
+    }
+pdfjs-digital-signature-properties-banner-invalid =
+    { $count ->
+        [one] Dokument ma { $count } njepłaśiwu digitalnu signaturu
+        [two] Dokument ma { $count } njepłaśiwej digitalnej signaturje
+        [few] Dokument ma { $count } njepłaśiwe digitalne signatury
+       *[other] Dokument ma { $count } njepłaśiwych digitalnych signaturow
+    }
+pdfjs-digital-signature-properties-banner-revoked =
+    { $count ->
+        [one] Dokument jo z { $count } wótwołanym certifikatom signěrowany
+        [two] Dokument jo z { $count } wótwołanyma certifikatoma signěrowany
+        [few] Dokument jo z { $count } wótwołanymi certifikatami signěrowany
+       *[other] Dokument jo z { $count } wótwołanymi certifikatami signěrowany
+    }
+
+## Per-signature status row. Only three distinct strings are needed:
+## the signature crypto either verified (the cert chain may still be
+## untrusted/expired/revoked, but that's surfaced on the cert row
+## below), or it failed, or its sub-format isn't supported.
+
+pdfjs-digital-signature-properties-status-verified = Status: Signatura jo wobkšuśona
+pdfjs-digital-signature-properties-status-invalid = Status: Signatura jo njepłaśiwa
+pdfjs-digital-signature-properties-status-unknown = Status: Njedajo se wobkšuśiś (njepódpěra se)
+
+## Per-signature certificate row. The variants with an issuer / date in
+## parentheses embed fully-localized context — no English fall-through.
+##
+## Variables:
+##   $issuer (String) - issuer or subject common name from the cert.
+##   $dateObj (Date)  - notAfter date for the expired-with-date form.
+
+pdfjs-digital-signature-properties-certificate-trusted = Certifikat: Dowěry gódny ({ $issuer })
+pdfjs-digital-signature-properties-certificate-unknown = Certifikat: Nic k dispoziciji
+pdfjs-digital-signature-properties-certificate-untrusted = Certifikat: Dowěry njegódny
+pdfjs-digital-signature-properties-certificate-untrusted-unknown-issuer = Certifikat: Njeznaty wudawaŕ ({ $issuer })
+pdfjs-digital-signature-properties-certificate-untrusted-self-signed = Certifikat: Samsigněrowany ({ $issuer })
+pdfjs-digital-signature-properties-certificate-untrusted-untrusted-issuer = Certifikat: Dowěry njegódny wudawaŕ ({ $issuer })
+pdfjs-digital-signature-properties-certificate-expired = Certifikat: Spadnjony
+pdfjs-digital-signature-properties-certificate-expired-with-date = Certifikat: Spadnjony ({ DATETIME($dateObj, dateStyle: "medium") })
+pdfjs-digital-signature-properties-certificate-revoked = Certifikat: Wótwołany
+
+## Main menu for adding/removing signatures
+
+pdfjs-editor-delete-signature-button1 =
+    .title = Skłaźonu signaturu wótwónoźeś
+pdfjs-editor-delete-signature-button-label1 = Skłaźonu signaturu wótwónoźeś
+
+## Editor toolbar
+
+pdfjs-editor-add-signature-edit-button-label = Wopisanje wobźěłaś
+
+## Edit signature description dialog
+
+pdfjs-editor-edit-signature-dialog-title = Wopisanje wobźěłaś

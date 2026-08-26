@@ -1,43 +1,63 @@
+diff --git a/web/viewer.html b/web/viewer.html
+--- a/web/viewer.html
++++ b/web/viewer.html
+@@ -27,11 +27,6 @@ See https://github.com/adobe-type-tools/cmap-resources
+     <meta name="google" content="notranslate" />
+     <title>PDF.js viewer</title>
+ 
+-  <meta
+-      http-equiv="Content-Security-Policy"
+-      content="default-src 'none'; script-src 'self' 'wasm-unsafe-eval'; worker-src 'self' blob:; style-src 'self'; img-src 'self' blob: data:; media-src blob:; font-src 'self' data:; connect-src * blob: data:; base-uri 'none'; form-action 'none';"
+-    />
+-
+ <!-- This snippet is used in production (included from viewer.html) -->
+ <link rel="resource" type="application/l10n" href="locale/locale.json" />
+ <script src="../build/pdf.mjs" type="module"></script>
 diff --git a/web/viewer.mjs b/web/viewer.mjs
-index c3d794a..9df6c47 100644
 --- a/web/viewer.mjs
 +++ b/web/viewer.mjs
-@@ -13347,7 +13347,8 @@ const PDFViewerApplication = {
-     const pdfRenderingQueue = new PDFRenderingQueue();
-     pdfRenderingQueue.onIdle = this._cleanup.bind(this);
-     this.pdfRenderingQueue = pdfRenderingQueue;
--    const pdfLinkService = new PDFLinkService({
-+    const vscode = acquireVsCodeApi()
-+    const pdfLinkService = new VSCodeLinkService(vscode, {
+@@ -24091,7 +24091,9 @@ const PDFViewerApplication = {
+     const overlayManager = this.overlayManager = new OverlayManager();
+     const renderingQueue = this.pdfRenderingQueue = new PDFRenderingQueue();
+     renderingQueue.onIdle = this._cleanup.bind(this);
+-    const linkService = this.pdfLinkService = new PDFLinkService({
++    const vscode = acquireVsCodeApi();
++    const config = JSON.parse(document.querySelector("#pdf-view-config")?.dataset.config ?? "{}");
++    const linkService = this.pdfLinkService = new VSCodeLinkService(vscode, config.resourceRoot, {
        eventBus,
        externalLinkTarget: AppOptions.get("externalLinkTarget"),
        externalLinkRel: AppOptions.get("externalLinkRel"),
-@@ -15362,4 +15363,25 @@ var __webpack_exports__PDFViewerApplicationConstants = __webpack_exports__.PDFVi
- var __webpack_exports__PDFViewerApplicationOptions = __webpack_exports__.PDFViewerApplicationOptions;
- export { __webpack_exports__PDFViewerApplication as PDFViewerApplication, __webpack_exports__PDFViewerApplicationConstants as PDFViewerApplicationConstants, __webpack_exports__PDFViewerApplicationOptions as PDFViewerApplicationOptions };
+@@ -26381,4 +26383,31 @@ if (document.readyState === "interactive" || document.readyState === "complete") {
+ 
+ export { PDFViewerApplication, AppConstants as PDFViewerApplicationConstants, AppOptions as PDFViewerApplicationOptions };
  
 -//# sourceMappingURL=viewer.mjs.map
 \ No newline at end of file
-+//# sourceMappingURL=viewer.mjs.map
-+
-+
 +class VSCodeLinkService extends PDFLinkService {
-+    #vscode
-+    constructor(vscode, ...args){
-+        super(...args)
-+        this.#vscode = vscode
-+    }
++  #vscode;
++  #resourceRoot;
 +
-+    addLinkAttributes(link, url, newWindow = false){
-+        if(typeof url === "string" && url.startsWith("https://file+.vscode-resource.vscode-cdn.net")){
-+            link.onclick = () => {
-+                this.#vscode.postMessage({
-+                    open: url
-+                });
-+            };
-+        } else {
-+            return super.addLinkAttributes(link, url, newWindow)
-+        }
++  constructor(vscode, resourceRoot, ...args) {
++    super(...args);
++    this.#vscode = vscode;
++    this.#resourceRoot = resourceRoot;
++  }
++
++  addLinkAttributes(link, url, newWindow = false) {
++    super.addLinkAttributes(link, url, newWindow);
++    if (
++      this.externalLinkEnabled &&
++      typeof url === "string" &&
++      typeof this.#resourceRoot === "string" &&
++      url.startsWith(this.#resourceRoot)
++    ) {
++      link.onclick = event => {
++        event.preventDefault();
++        this.#vscode.postMessage({ open: url });
++        return false;
++      };
 +    }
++  }
 +}
-\ No newline at end of file
++
++//# sourceMappingURL=viewer.mjs.map
