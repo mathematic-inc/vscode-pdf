@@ -17,3 +17,13 @@
 body {
   padding: 0;
 }
+
+body.vscode-light,
+body.vscode-high-contrast-light {
+  color-scheme: light;
+}
+
+body.vscode-dark,
+body.vscode-high-contrast {
+  color-scheme: dark;
+}

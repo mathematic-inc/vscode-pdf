@@ -6,15 +6,17 @@ A lightweight, reliable PDF viewer for Visual Studio Code, powered by [Mozilla P
 
 ## Overview
 
-This extension runs the latest `pdf.js` underneath. A demo of their editor (hence ours) can be found [here](https://mozilla.github.io/pdf.js/web/viewer.html).
+This extension runs the latest `pdf.js` underneath. Try the [PDF.js demo viewer](https://mozilla.github.io/pdf.js/web/viewer.html).
 
 ## Why?
 
-Most extensions currently in the marketplace have problems too deep to fix. These problems include memory leaks, outdated dependencies, and several debouncing issues. A priori, this extension does not have these issues and also seeks to provide only viewing capabilities. Nothing more.
+Most extensions currently in the marketplace have problems too deep to fix. These problems include memory leaks, outdated dependencies, and several debouncing issues. A priori, this extension does not have these issues and seeks to provide only viewing capabilities. Nothing more.
 
 ## Installation
 
 Install from the [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=mathematic.vscode-pdf) or from the [Open VSX Registry](https://open-vsx.org/extension/mathematic/vscode-pdf).
+
+The current PDF.js viewer requires VS Code 1.95 or later.
 
 Alternatively, search for **"PDF Viewer"** in the Extensions view (`Ctrl+Shift+X` / `Cmd+Shift+X`) inside VS Code.
 
@@ -24,7 +26,7 @@ Once installed, open any `.pdf` file in VS Code. The extension automatically reg
 
 ## Contributing
 
-Start with a [Discussion](../../discussions/new), not a pull request. A
+Start with a [Discussion](https://github.com/mathematic-inc/vscode-pdf/discussions/new), not a pull request. A
 Mathematic maintainer will review the proposal. If we decide to implement it, a
 maintainer or one of our AI agents will open the pull request. When Mathematic
 implements a proposal, the implementation pull request will link to the
@@ -36,19 +38,17 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for the full policy.
 
 ## Support us
 
-If you find this extension helpful, please consider supporting its development through GitHub Sponsors. Your support helps maintain and improve this extension. Click [here](https://github.com/sponsors/mathematic-inc) to become a sponsor.
-
+If you find this extension helpful, please consider [supporting its development through GitHub Sponsors](https://github.com/sponsors/mathematic-inc). Your support helps maintain and improve this extension.
 
 ## Updating PDF.js
 
-* update `pdfjs_version.txt` to target version and hash
-* from root folder of this repo run `tools/prepare_pdfjs.sh`, this will download PDF.js in given version and try to apply patches from the `patches` folder to it
-    * if the patches apply cleanly the command terminates and you are done
-    * if the patches fail to apply, for every conflict a `*.rej` file will be generated in the `assets/pdf.js` folder, 
-        you need to resolve these manually and then delete the `.rej` files
+- update `pdfjs_version.txt` to target version and hash
+- from root folder of this repo run `tools/prepare_pdfjs.sh`, this will download PDF.js in given version and try to apply patches from the `patches` folder to it
+  - if the patches apply cleanly the command terminates and you are done
+  - if the patches fail to apply, for every conflict a `*.rej` file will be generated in the `assets/pdf.js` folder,
+    you need to resolve these manually and then delete the `.rej` files
 
-If you want to keep current version of PDF.js but add some more patches, run with flag `--update-patches` which will stop after applying the current patches same as in the above case, leaving you to modify the `assets/pdf.js` however you see fit, 
-once done new patch will be created to match your edits.
+To keep the current PDF.js version and add patches, run with the `--update-patches` flag. The script stops after applying the current patches so you can modify `assets/pdf.js`. When you finish, it creates a new patch from your changes.
 
 After you prepared your patches you can run the same command again, the second time the patches should apply cleanly and the `assets/pdf.js` should have the updated content you created earlier.
 

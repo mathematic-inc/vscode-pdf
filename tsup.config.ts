@@ -6,7 +6,7 @@ export default defineConfig({
   external: ["vscode"],
   outDir: "dist",
   sourcemap: true,
-  target: "es2024",
+  target: "node20",
   loader: {
     ".html": "text",
   },

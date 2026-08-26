@@ -15,6 +15,7 @@
  */
 
 import { join } from "node:path";
+
 import {
   type CustomReadonlyEditorProvider,
   commands,
@@ -28,7 +29,6 @@ import {
 } from "vscode";
 
 import rawViewerHtml from "../assets/pdf.js/web/viewer.html";
-
 import { disposeAll } from "./disposable";
 import { PDFDocument } from "./pdf-document";
 import { escapeAttribute } from "./utils";
@@ -37,19 +37,19 @@ import { WebviewCollection } from "./webview-collection";
 const viewerHtml = rawViewerHtml
   .replace(
     /* html */
-    `<link rel="resource" type="application/l10n" href="locale/locale.json">`,
-    ""
+    `<link rel="resource" type="application/l10n" href="locale/locale.json" />`,
+    "",
   )
-  .replace(
-    /* html */ `<script src="../build/pdf.mjs" type="module"></script>`,
-    ""
-  )
+  .replace(/* html */ `<script src="../build/pdf.mjs" type="module"></script>`, "")
   .replace(/* html */ `<script src="viewer.mjs" type="module"></script>`, "")
-  .replace(/* html */ `<link rel="stylesheet" href="viewer.css">`, "");
+  .replace(/* html */ `<link rel="stylesheet" href="viewer.css" />`, "");
 
-const vscodeWebviewUriPrefix = "https://file+.vscode-resource.vscode-cdn.net";
+const resourcePathRegex = /\/[^/]+?\.\w+$/u;
 
-const resourcePathRegex = /\/[^/]+?\.\w+$/;
+function withTrailingSlash(uri: Uri): string {
+  const value = uri.toString();
+  return value.endsWith("/") ? value : `${value}/`;
+}
 
 export class PDFViewerProvider implements CustomReadonlyEditorProvider {
   static readonly viewType = "pdf.view";
@@ -60,7 +60,7 @@ export class PDFViewerProvider implements CustomReadonlyEditorProvider {
       new PDFViewerProvider(context),
       {
         supportsMultipleEditorsPerDocument: false,
-      }
+      },
     );
   }
 
@@ -84,7 +84,7 @@ export class PDFViewerProvider implements CustomReadonlyEditorProvider {
         for (const webviewPanel of this.webviews.get(e)) {
           webviewPanel.webview.postMessage({ action: "reload" });
         }
-      })
+      }),
     );
 
     document.onDidDelete(() => disposeAll(listeners));
@@ -105,6 +105,7 @@ export class PDFViewerProvider implements CustomReadonlyEditorProvider {
     const resourceRoot = document.uri.with({
       path: document.uri.path.replace(resourcePathRegex, "/"),
     });
+    const webviewResourceRoot = withTrailingSlash(webviewPanel.webview.asWebviewUri(resourceRoot));
     webviewPanel.webview.options = {
       enableScripts: true,
       localResourceRoots: [resourceRoot, this.extensionRoot],
@@ -112,38 +113,65 @@ export class PDFViewerProvider implements CustomReadonlyEditorProvider {
 
     webviewPanel.webview.html = this.getHtmlForWebview(
       document,
-      webviewPanel.webview
+      webviewPanel.webview,
+      resourceRoot,
     );
 
-    webviewPanel.webview.onDidReceiveMessage((msg) => {
-      if ("open" in msg) {
-        const urlWithCdnScheme = msg.open as string;
-        const [file = "", hash] = urlWithCdnScheme
-          .substring(vscodeWebviewUriPrefix.length)
-          .split("#");
-        commands.executeCommand(
-          "vscode.open",
-          Uri.file(file).with({ fragment: hash ?? "" })
+    webviewPanel.webview.onDidReceiveMessage(async (message: unknown) => {
+      if (
+        typeof message !== "object" ||
+        message === null ||
+        !("open" in message) ||
+        typeof message.open !== "string"
+      ) {
+        return;
+      }
+
+      try {
+        const resourceRootUrl = new URL(webviewResourceRoot);
+        const targetUrl = new URL(message.open);
+        if (
+          targetUrl.origin !== resourceRootUrl.origin ||
+          !targetUrl.pathname.startsWith(resourceRootUrl.pathname)
+        ) {
+          return;
+        }
+
+        const relativePath = decodeURIComponent(
+          targetUrl.pathname.slice(resourceRootUrl.pathname.length),
         );
+        const fragment = decodeURIComponent(targetUrl.hash.slice(1));
+        await commands.executeCommand(
+          "vscode.open",
+          Uri.joinPath(resourceRoot, relativePath).with({ fragment }),
+        );
+      } catch {
+        // Ignore malformed or non-local messages from the webview.
       }
     });
   }
 
-  private getHtmlForWebview(document: PDFDocument, webview: Webview): string {
+  private getHtmlForWebview(document: PDFDocument, webview: Webview, resourceRoot: Uri): string {
     const resolveUri = this.UriResolver(webview);
-    const resolveAssetURI = (...paths: string[]) =>
-      resolveUri("assets", ...paths);
-    const resolvePdfJsURI = (...paths: string[]) =>
-      resolveUri("assets", "pdf.js", ...paths);
+    const resolveAssetURI = (...paths: string[]) => resolveUri("assets", ...paths);
+    const resolvePdfJsURI = (...paths: string[]) => resolveUri("assets", "pdf.js", ...paths);
 
     const cspSource = webview.cspSource;
 
-    const config = workspace.getConfiguration("pdf");
+    const config = workspace.getConfiguration("pdf", document.uri);
     const settings = {
       url: `${webview.asWebviewUri(document.uri)}`,
       docBaseUrl: `${webview.asWebviewUri(document.uri)}`,
+      resourceRoot: withTrailingSlash(webview.asWebviewUri(resourceRoot)),
       defaultZoomValue: config.get<string>("defaultZoomValue", "auto"),
       sidebarViewOnLoad: config.get<number>("sidebarViewOnLoad", 0),
+      workerSrc: `${resolvePdfJsURI("build", "pdf.worker.mjs")}`,
+      sandboxBundleSrc: `${resolvePdfJsURI("build", "pdf.sandbox.mjs")}`,
+      cMapUrl: withTrailingSlash(resolvePdfJsURI("web", "cmaps")),
+      iccUrl: withTrailingSlash(resolvePdfJsURI("web", "iccs")),
+      standardFontDataUrl: withTrailingSlash(resolvePdfJsURI("web", "standard_fonts")),
+      wasmUrl: withTrailingSlash(resolvePdfJsURI("web", "wasm")),
+      imageResourcesPath: withTrailingSlash(resolvePdfJsURI("web", "images")),
     };
 
     return viewerHtml
@@ -151,7 +179,7 @@ export class PDFViewerProvider implements CustomReadonlyEditorProvider {
         /* html */ "<title>PDF.js viewer</title>",
         /* html */
         `
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; connect-src ${cspSource}; script-src 'unsafe-inline' ${cspSource}; worker-src blob: ${cspSource}; style-src 'unsafe-inline' ${cspSource}; img-src * ${cspSource} data:;">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; connect-src ${cspSource} blob: data:; script-src ${cspSource} 'wasm-unsafe-eval'; worker-src ${cspSource} blob:; style-src ${cspSource} 'unsafe-inline'; img-src ${cspSource} blob: data:; font-src ${cspSource} data:; media-src blob:; base-uri 'none'; form-action 'none';">
 <meta id="pdf-view-config" data-config="${escapeAttribute(settings)}">
 
 <title>PDF.js viewer</title>
@@ -165,8 +193,8 @@ export class PDFViewerProvider implements CustomReadonlyEditorProvider {
 <link rel="resource" type="application/l10n" href="${resolvePdfJsURI(
           "web",
           "locale",
-          "locale.json"
-        )}">`
+          "locale.json",
+        )}">`,
       )
       .trim();
   }

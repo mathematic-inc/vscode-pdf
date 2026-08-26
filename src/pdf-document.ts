@@ -15,6 +15,7 @@
  */
 
 import { type CustomDocument, EventEmitter, type Uri, workspace } from "vscode";
+
 import { Disposable } from "./disposable";
 
 function areUriEqual(l: Uri, r: Uri) {
@@ -31,9 +32,7 @@ export class PDFDocument extends Disposable implements CustomDocument {
     super();
     this._uri = uri;
 
-    const watcher = this._register(
-      workspace.createFileSystemWatcher(uri.fsPath)
-    );
+    const watcher = this._register(workspace.createFileSystemWatcher(uri.fsPath));
 
     const onChangeHandler = (e: Uri) => {
       if (areUriEqual(e, uri)) {
