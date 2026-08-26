@@ -12,6 +12,9 @@ proposal, so we use a discussion-first process.
 3. If we decide to proceed, a Mathematic maintainer or agent will open the pull
    request.
 
+When Mathematic implements a proposal, the implementation pull request will link
+to the Discussion and credit its original author.
+
 GitHub restricts pull request creation to Mathematic maintainers, repository
 collaborators with write, maintain, or admin access, and authorized maintenance
 agents. Everyone else must use Discussions.
