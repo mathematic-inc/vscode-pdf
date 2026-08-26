@@ -22,6 +22,18 @@ Alternatively, search for **"PDF Viewer"** in the Extensions view (`Ctrl+Shift+X
 
 Once installed, open any `.pdf` file in VS Code. The extension automatically registers as the default editor for PDF files and renders them using the built-in PDF.js viewer.
 
+## Contributing
+
+Start with a [Discussion](../../discussions/new), not a pull request. A
+Mathematic maintainer will review the proposal. If we decide to implement it, a
+maintainer or one of our AI agents will open the pull request. When Mathematic
+implements a proposal, the implementation pull request will link to the
+Discussion and credit its original author. GitHub restricts pull request creation
+to Mathematic maintainers, repository collaborators with write, maintain, or
+admin access, and authorized maintenance agents.
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the full policy.
+
 ## Support us
 
 If you find this extension helpful, please consider supporting its development through GitHub Sponsors. Your support helps maintain and improve this extension. Click [here](https://github.com/sponsors/mathematic-inc) to become a sponsor.
