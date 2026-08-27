@@ -48,6 +48,7 @@ for (const snippet of [
 ]) {
   assert.ok(patch.includes(snippet), `Missing link guard: ${snippet}`);
 }
+assert.ok(main.includes("event.origin !== window.origin"), "Missing message origin guard");
 for (const snippet of ["targetUrl.origin", "resourceRootUrl.pathname", "Uri.joinPath"]) {
   assert.ok(provider.includes(snippet), `Missing message guard: ${snippet}`);
 }

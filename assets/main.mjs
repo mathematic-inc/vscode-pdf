@@ -60,6 +60,10 @@ void (async () => {
 })();
 
 window.addEventListener("message", async (event) => {
+  if (event.origin !== window.origin) {
+    return;
+  }
+
   await window.PDFViewerApplication.initializedPromise;
   const currentPageNumber = window.PDFViewerApplication.pdfViewer.currentPageNumber;
   switch (event.data.action) {
