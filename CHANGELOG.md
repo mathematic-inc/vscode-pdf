@@ -5,12 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.1.12](https://github.com/mathematic-inc/vscode-pdf/compare/v0.1.11...v0.1.12) (2026-08-27)
+## [0.2.0](https://github.com/mathematic-inc/vscode-pdf/compare/v0.1.11...v0.2.0) (2026-08-27)
 
+### ⚠ BREAKING CHANGES
+
+- Require VS Code `^1.95.0`.
+
+### Features
+
+- Update to PDF.js 6.2.108 and load viewer resources through VS Code webview URIs.
+- Match the PDF viewer to VS Code light, dark, and high-contrast themes.
 
 ### Bug Fixes
 
-* **security:** Validate webview message origin ([#55](https://github.com/mathematic-inc/vscode-pdf/issues/55)) ([fa72f6a](https://github.com/mathematic-inc/vscode-pdf/commit/fa72f6a66162d5814fe14cb0398509d5dcd30237))
+- **security:** Validate webview message origins and restrict local PDF links to the current resource root ([#55](https://github.com/mathematic-inc/vscode-pdf/issues/55)) ([fa72f6a](https://github.com/mathematic-inc/vscode-pdf/commit/fa72f6a66162d5814fe14cb0398509d5dcd30237))
+
+### Maintenance
+
+- Use hk, Oxlint, Oxfmt, strict TypeScript checks, Dependabot, and hardened CI.
 
 ## [0.1.11](https://github.com/mathematic-inc/vscode-pdf/compare/v0.1.10...v0.1.11) (2026-03-13)
 
