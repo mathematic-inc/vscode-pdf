@@ -2,3 +2,7 @@ allowBuilds:
   "@vscode/vsce-sign": true
   esbuild: true
   keytar: true
+minimumReleaseAgeExclude:
+  - '@types/node@26.4.0'
+overrides:
+  esbuild: 0.28.2
