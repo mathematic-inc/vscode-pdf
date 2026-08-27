@@ -53,6 +53,7 @@ document.addEventListener(
 void (async () => {
   await window.PDFViewerApplication.initializedPromise;
   await window.PDFViewerApplication.open(config);
+  await window.PDFViewerApplication.pdfViewer.pagesPromise;
   const [, hash] = config.url.split("#");
   if (hash) {
     window.PDFViewerApplication.pdfLinkService.setHash(decodeURIComponent(hash));

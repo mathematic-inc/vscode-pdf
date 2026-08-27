@@ -49,6 +49,13 @@ for (const snippet of [
   assert.ok(patch.includes(snippet), `Missing link guard: ${snippet}`);
 }
 assert.ok(main.includes("event.origin !== window.origin"), "Missing message origin guard");
+const initialOpen = main.indexOf("PDFViewerApplication.open(config)");
+const pagesReady = main.indexOf("pdfViewer.pagesPromise");
+const fragmentApplied = main.indexOf("pdfLinkService.setHash");
+assert.ok(
+  initialOpen !== -1 && initialOpen < pagesReady && pagesReady < fragmentApplied,
+  "PDF fragment applied before pages are ready",
+);
 for (const snippet of ["targetUrl.origin", "resourceRootUrl.pathname", "Uri.joinPath"]) {
   assert.ok(provider.includes(snippet), `Missing message guard: ${snippet}`);
 }
