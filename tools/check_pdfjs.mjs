@@ -26,7 +26,6 @@ for (const tag of [
 }
 
 const assets = new Map([
-  ["workerSrc", "assets/pdf.js/build/pdf.worker.mjs"],
   ["sandboxBundleSrc", "assets/pdf.js/build/pdf.sandbox.mjs"],
   ["cMapUrl", "assets/pdf.js/web/cmaps/LICENSE"],
   ["iccUrl", "assets/pdf.js/web/iccs/CGATS001Compat-v2-micro.icc"],
@@ -40,6 +39,12 @@ for (const [option, path] of assets) {
   assert.ok(main.includes(`set("${option}"`), `Missing viewer option: ${option}`);
   assert.ok(existsSync(join(root, path)), `Missing PDF.js asset: ${path}`);
 }
+assert.ok(existsSync(join(root, "assets/pdf.js/build/pdf.worker.mjs")), "Missing PDF.js worker");
+assert.ok(
+  !main.includes('set("workerSrc"'),
+  "Absolute workerSrc triggers a 30-second webview delay",
+);
+assert.ok(!provider.includes("workerSrc:"), "Do not override PDF.js's relative workerSrc");
 
 for (const snippet of [
   "super.addLinkAttributes(link, url, newWindow)",

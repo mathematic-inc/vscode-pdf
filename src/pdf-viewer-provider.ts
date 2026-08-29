@@ -165,7 +165,6 @@ export class PDFViewerProvider implements CustomReadonlyEditorProvider {
       resourceRoot: withTrailingSlash(webview.asWebviewUri(resourceRoot)),
       defaultZoomValue: config.get<string>("defaultZoomValue", "auto"),
       sidebarViewOnLoad: config.get<number>("sidebarViewOnLoad", 0),
-      workerSrc: `${resolvePdfJsURI("build", "pdf.worker.mjs")}`,
       sandboxBundleSrc: `${resolvePdfJsURI("build", "pdf.sandbox.mjs")}`,
       cMapUrl: withTrailingSlash(resolvePdfJsURI("web", "cmaps")),
       iccUrl: withTrailingSlash(resolvePdfJsURI("web", "iccs")),

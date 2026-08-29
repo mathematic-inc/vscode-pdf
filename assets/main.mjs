@@ -30,7 +30,6 @@ PDFViewerApplicationOptions.set("defaultUrl", "");
 PDFViewerApplicationOptions.set("disablePreferences", true);
 PDFViewerApplicationOptions.set("defaultZoomValue", config.defaultZoomValue ?? "auto");
 PDFViewerApplicationOptions.set("sidebarViewOnLoad", config.sidebarViewOnLoad ?? 0);
-PDFViewerApplicationOptions.set("workerSrc", config.workerSrc);
 PDFViewerApplicationOptions.set("sandboxBundleSrc", config.sandboxBundleSrc);
 PDFViewerApplicationOptions.set("cMapUrl", config.cMapUrl);
 PDFViewerApplicationOptions.set("iccUrl", config.iccUrl);
