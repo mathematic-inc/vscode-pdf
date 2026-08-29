@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.3](https://github.com/mathematic-inc/vscode-pdf/compare/v0.2.2...v0.2.3) (2026-08-29)
+
+
+### Bug Fixes
+
+* Avoid delayed PDF worker startup ([#64](https://github.com/mathematic-inc/vscode-pdf/issues/64)) ([6feb85a](https://github.com/mathematic-inc/vscode-pdf/commit/6feb85a1cea516eed2c9e5026831cc5965e43236))
+
 ## [0.2.2](https://github.com/mathematic-inc/vscode-pdf/compare/v0.2.1...v0.2.2) (2026-08-27)
 
 
