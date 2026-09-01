@@ -14,11 +14,25 @@
  * limitations under the License.
  */
 
-import type { ExtensionContext } from "vscode";
+import { env, type ExtensionContext, Uri, window } from "vscode";
 
 import { PDFViewerProvider } from "./pdf-viewer-provider";
 
 export function activate(context: ExtensionContext): void {
+  if (!context.globalState.get<boolean>("supportPromptShown")) {
+    void context.globalState.update("supportPromptShown", true);
+    void window
+      .showInformationMessage(
+        "Mathematic is a 501(c)(3) non-profit. Please consider supporting our free, open-source work.",
+        "Support Mathematic",
+      )
+      .then((selection) => {
+        if (selection === "Support Mathematic") {
+          void env.openExternal(Uri.parse("https://github.com/sponsors/mathematic-inc"));
+        }
+      });
+  }
+
   context.subscriptions.push(PDFViewerProvider.register(context));
 }
 
