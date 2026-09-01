@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.4](https://github.com/mathematic-inc/vscode-pdf/compare/v0.2.3...v0.2.4) (2026-09-01)
+
+
+### Features
+
+* Add one-time nonprofit support prompt ([#67](https://github.com/mathematic-inc/vscode-pdf/issues/67)) ([08e92b4](https://github.com/mathematic-inc/vscode-pdf/commit/08e92b44e80d70284c4815f2b22652873e501551))
+
 ## [0.2.3](https://github.com/mathematic-inc/vscode-pdf/compare/v0.2.2...v0.2.3) (2026-08-29)
 
 
