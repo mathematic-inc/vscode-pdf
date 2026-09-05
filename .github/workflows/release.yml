@@ -4,9 +4,15 @@ on:
   push:
     tags:
       - v*
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing release tag to retry
+        required: true
+        type: string
 
 concurrency:
-  group: release-${{ github.workflow }}-${{ github.ref }}
+  group: release-${{ github.workflow }}-${{ inputs.tag || github.ref_name }}
   cancel-in-progress: false
 
 permissions: {}
@@ -22,6 +28,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          ref: ${{ inputs.tag && format('refs/tags/{0}', inputs.tag) || github.ref }}
           persist-credentials: false
       - name: Set up pnpm
         uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6.0.10
@@ -73,6 +80,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
+          ref: ${{ inputs.tag && format('refs/tags/{0}', inputs.tag) || github.ref }}
           persist-credentials: false
 
       - name: Download release assets
@@ -84,18 +92,18 @@ jobs:
       - name: Create GitHub release
         uses: softprops/action-gh-release@3d0d9888cb7fd7b750713d6e236d1fcb99157228 # v3.0.2
         with:
-          tag_name: ${{ github.ref_name }}
-          name: ${{ github.ref_name }}
+          tag_name: ${{ inputs.tag || github.ref_name }}
+          name: ${{ inputs.tag || github.ref_name }}
           generate_release_notes: true
-          prerelease: ${{ contains(github.ref_name, '-') }}
+          prerelease: ${{ contains(inputs.tag || github.ref_name, '-') }}
           files: dist/*
           fail_on_unmatched_files: true
-          make_latest: ${{ !contains(github.ref_name, '-') }}
+          make_latest: ${{ !contains(inputs.tag || github.ref_name, '-') }}
 
       - name: Trigger release notes workflow
         env:
           GH_TOKEN: ${{ secrets.RELEASE_TOKEN }}
-          RELEASE_TAG: ${{ github.ref_name }}
+          RELEASE_TAG: ${{ inputs.tag || github.ref_name }}
         run: |
           gh workflow run release-notes.yml \
             --field tag="$RELEASE_TAG"
@@ -123,8 +131,14 @@ jobs:
       - name: Publish to Open VSX
         env:
           OVSX_PAT: ${{ secrets.OPEN_VSX_TOKEN }}
-        run: npx --yes ovsx@1.1.1 publish dist/*.vsix
+        run: |
+          OVSX_PAT="$(node -p 'process.env.OVSX_PAT.trim()')"
+          echo "::add-mask::$OVSX_PAT"
+          npx --yes ovsx@1.1.1 publish --skip-duplicate dist/*.vsix
       - name: Publish to VS Marketplace
         env:
           VSCE_PAT: ${{ secrets.VS_MARKETPLACE_TOKEN }}
-        run: npx --yes @vscode/vsce@3.9.2 publish --packagePath dist/*.vsix
+        run: |
+          VSCE_PAT="$(node -p 'process.env.VSCE_PAT.trim()')"
+          echo "::add-mask::$VSCE_PAT"
+          npx --yes @vscode/vsce@3.9.2 publish --skip-duplicate --packagePath dist/*.vsix
