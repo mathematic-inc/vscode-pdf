@@ -12,13 +12,14 @@ on:
         type: string
 
 concurrency:
-  group: release-${{ github.workflow }}-${{ inputs.tag || github.ref_name }}
+  group: release-${{ github.workflow }}-${{ github.ref_name }}
   cancel-in-progress: false
 
 permissions: {}
 
 jobs:
   build-artifacts:
+    if: github.event_name != 'workflow_dispatch'
     name: Build
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -28,7 +29,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          ref: ${{ inputs.tag && format('refs/tags/{0}', inputs.tag) || github.ref }}
           persist-credentials: false
       - name: Set up pnpm
         uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6.0.10
@@ -80,7 +80,6 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
-          ref: ${{ inputs.tag && format('refs/tags/{0}', inputs.tag) || github.ref }}
           persist-credentials: false
 
       - name: Download release assets
@@ -92,23 +91,24 @@ jobs:
       - name: Create GitHub release
         uses: softprops/action-gh-release@3d0d9888cb7fd7b750713d6e236d1fcb99157228 # v3.0.2
         with:
-          tag_name: ${{ inputs.tag || github.ref_name }}
-          name: ${{ inputs.tag || github.ref_name }}
+          tag_name: ${{ github.ref_name }}
+          name: ${{ github.ref_name }}
           generate_release_notes: true
-          prerelease: ${{ contains(inputs.tag || github.ref_name, '-') }}
+          prerelease: ${{ contains(github.ref_name, '-') }}
           files: dist/*
           fail_on_unmatched_files: true
-          make_latest: ${{ !contains(inputs.tag || github.ref_name, '-') }}
+          make_latest: ${{ !contains(github.ref_name, '-') }}
 
       - name: Trigger release notes workflow
         env:
           GH_TOKEN: ${{ secrets.RELEASE_TOKEN }}
-          RELEASE_TAG: ${{ inputs.tag || github.ref_name }}
+          RELEASE_TAG: ${{ github.ref_name }}
         run: |
           gh workflow run release-notes.yml \
             --field tag="$RELEASE_TAG"
 
   publish-vscode:
+    if: ${{ !cancelled() && (github.event_name == 'workflow_dispatch' || needs.create-release.result == 'success') }}
     name: Publish VSCode Extension
     needs:
       - create-release
@@ -124,10 +124,18 @@ jobs:
           node-version: "24"
           package-manager-cache: false
       - name: Download release assets
+        if: github.event_name != 'workflow_dispatch'
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           name: release-assets
           path: dist
+      - name: Download existing release assets for retry
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_TAG: ${{ inputs.tag }}
+        run: gh release download "$RELEASE_TAG" --pattern '*.vsix' --dir dist
       - name: Publish to Open VSX
         env:
           OVSX_PAT: ${{ secrets.OPEN_VSX_TOKEN }}
