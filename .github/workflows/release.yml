@@ -110,22 +110,21 @@ jobs:
     permissions:
       contents: read
     steps:
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "24"
+          package-manager-cache: false
       - name: Download release assets
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           name: release-assets
           path: dist
-      - name: Find VSIX file
-        id: find-vsix
-        run: echo "path=$(ls dist/*.vsix)" >> "$GITHUB_OUTPUT"
       - name: Publish to Open VSX
-        uses: HaaLeo/publish-vscode-extension@ca5561daa085dee804bf9f37fe0165785a9b14db # v2.0.0
-        with:
-          pat: ${{ secrets.OPEN_VSX_TOKEN }}
-          extensionFile: ${{ steps.find-vsix.outputs.path }}
+        env:
+          OVSX_PAT: ${{ secrets.OPEN_VSX_TOKEN }}
+        run: npx --yes ovsx@1.1.1 publish dist/*.vsix
       - name: Publish to VS Marketplace
-        uses: HaaLeo/publish-vscode-extension@ca5561daa085dee804bf9f37fe0165785a9b14db # v2.0.0
-        with:
-          pat: ${{ secrets.VS_MARKETPLACE_TOKEN }}
-          registryUrl: https://marketplace.visualstudio.com
-          extensionFile: ${{ steps.find-vsix.outputs.path }}
+        env:
+          VSCE_PAT: ${{ secrets.VS_MARKETPLACE_TOKEN }}
+        run: npx --yes @vscode/vsce@3.9.2 publish --packagePath dist/*.vsix
