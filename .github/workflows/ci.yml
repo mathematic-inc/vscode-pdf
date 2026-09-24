@@ -31,5 +31,7 @@ jobs:
         run: pnpm install --frozen-lockfile
       - name: Package
         run: pnpm run package
+      - name: Verify VSIX packaging
+        run: pnpm exec vsce package --no-dependencies --out "$RUNNER_TEMP/vscode-pdf.vsix"
       - name: Audit dependencies
         run: pnpm audit --audit-level high
