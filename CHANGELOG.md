@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.6](https://github.com/mathematic-inc/vscode-pdf/compare/v0.2.5...v0.2.6) (2026-09-24)
+
+
+### Bug Fixes
+
+* **deps:** Preserve VS Code engine compatibility ([53fcab2](https://github.com/mathematic-inc/vscode-pdf/commit/53fcab2e46fd7f3420f269100fb2178cc36b4ee5))
+* **deps:** Preserve VS Code engine compatibility ([#94](https://github.com/mathematic-inc/vscode-pdf/issues/94)) ([babb88d](https://github.com/mathematic-inc/vscode-pdf/commit/babb88d912a10cafb4edec0dd979c017d34cd8ef))
+* **deps:** Remediate vulnerable transitive packages ([#85](https://github.com/mathematic-inc/vscode-pdf/issues/85)) ([594122c](https://github.com/mathematic-inc/vscode-pdf/commit/594122cb5bbc5a4560acf0b7b3cbfde2646de01f))
+
 ## [0.2.5](https://github.com/mathematic-inc/vscode-pdf/compare/v0.2.4...v0.2.5) (2026-09-05)
 
 
