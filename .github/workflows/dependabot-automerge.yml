@@ -1,4 +1,4 @@
-name: Dependabot auto-merge
+name: Dependabot strict gate
 
 on:
   pull_request:
@@ -67,21 +67,3 @@ jobs:
 
           echo "Strict checks did not all pass on $PR_HEAD_SHA." >&2
           exit 1
-
-  dependabot:
-    name: Enable auto-merge
-    needs: strict-gate
-    if: github.event_name == 'pull_request' && github.event.pull_request.user.login == 'dependabot[bot]'
-    runs-on: ubuntu-24.04
-    timeout-minutes: 5
-    permissions:
-      contents: write
-      pull-requests: write
-    steps:
-      - name: Enable auto-merge with a conventional merge commit
-        env:
-          GH_TOKEN: ${{ github.token }}
-          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
-          PR_TITLE: ${{ github.event.pull_request.title }}
-          PR_URL: ${{ github.event.pull_request.html_url }}
-        run: gh pr merge --auto --merge --match-head-commit "$PR_HEAD_SHA" --subject "$PR_TITLE" "$PR_URL"
