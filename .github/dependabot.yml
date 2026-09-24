@@ -4,6 +4,10 @@ updates:
     directory: /
     commit-message:
       prefix: "chore(deps)"
+    groups:
+      codeql:
+        patterns:
+          - "github/codeql-action/*"
     schedule:
       interval: weekly
     cooldown:
