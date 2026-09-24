@@ -3,7 +3,7 @@ allowBuilds:
   esbuild: true
   keytar: true
 minimumReleaseAgeExclude:
-  - '@types/node@26.4.0'
+  - "@types/node@26.4.0"
 overrides:
   esbuild: 0.28.2
   js-yaml: 4.3.2

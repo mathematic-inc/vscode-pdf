@@ -1,5 +1,11 @@
 {
-  "ignorePatterns": ["assets/pdf.js/**", "**/dist/**", "**/gen/**", "**/generated/**"],
+  "ignorePatterns": [
+    "CHANGELOG.md",
+    "assets/pdf.js/**",
+    "**/dist/**",
+    "**/gen/**",
+    "**/generated/**"
+  ],
   "semi": true,
   "singleQuote": false,
   "sortImports": true,
