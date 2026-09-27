@@ -7,3 +7,4 @@ minimumReleaseAgeExclude:
 overrides:
   esbuild: 0.28.2
   js-yaml: 4.3.2
+  qs: 6.16.0
