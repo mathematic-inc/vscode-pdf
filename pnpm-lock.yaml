@@ -17,8 +17,8 @@ importers:
         specifier: 26.6.1
         version: 26.6.1
       '@types/vscode':
-        specifier: 1.134.0
-        version: 1.134.0
+        specifier: 1.138.0
+        version: 1.138.0
       '@vscode/vsce':
         specifier: ^4.0.0
         version: 4.0.0(supports-color@7.2.0)
@@ -753,8 +753,8 @@ packages:
   '@types/node@26.6.1':
     resolution: {integrity: sha512-VqGJBMCtdhqkBUCcBLvywI0NJ+KLuVzgNnlBUNFOQjqVxzo2lxLUNg1DSey8+u2u6ktswSAxg+s68QLzWHNOuA==}
 
-  '@types/vscode@1.134.0':
-    resolution: {integrity: sha512-NDEu0hg4sF7+vvFsADsktqUJ6f80LHSZvVK2Ovo1XiQ0/VHck1O3zst+ZZyVA/uvz6vo6LcuoqU2q48YMqOwWw==}
+  '@types/vscode@1.138.0':
+    resolution: {integrity: sha512-DhlvrucJa8n6EHst7qQcXOcjLKs/VRTQy55plLO+RN74jonYsr/t9dd66zBnAyz1tpDig0okQAxuoPHpVNje2g==}
 
   '@typescript/typescript-aix-ppc64@7.0.2':
     resolution: {integrity: sha512-MTKKkWB7p/0E9xi1d1tHtZ5PiLkGEMIq88pK2CubZjOsLtYTLqhgIgi6zepFa+9GHZ6h05NMCkQxGKiPXMxXtQ==}
@@ -1941,7 +1941,7 @@ snapshots:
     dependencies:
       undici-types: 8.9.0
 
-  '@types/vscode@1.134.0': {}
+  '@types/vscode@1.138.0': {}
 
   '@typescript/typescript-aix-ppc64@7.0.2':
     optional: true
