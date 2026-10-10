@@ -40,7 +40,9 @@ jobs:
 
             checks=$(gh api "repos/$GITHUB_REPOSITORY/commits/$PR_HEAD_SHA/check-runs?per_page=100")
             if jq -e '
-              .check_runs as $runs
+              (.check_runs
+              | group_by([.name, .app.id])
+              | map(max_by([.started_at, .id]))) as $runs
               | ([
                   ["CI", 15368],
                   ["Check", 15368],
