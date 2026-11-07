@@ -10463,14 +10463,15 @@ class BaseDownloadManager {
 
 class DownloadManager extends BaseDownloadManager {
   _triggerDownload(blobUrl, originalUrl, filename, isAttachment = false) {
+    const downloadUrl = new URL(blobUrl || originalUrl, document.baseURI);
+    if (downloadUrl.protocol !== "https:" && downloadUrl.protocol !== "http:" && downloadUrl.protocol !== "blob:") {
+      throw new Error("_triggerDownload - unsupported URL protocol");
+    }
     if (!blobUrl && !isAttachment) {
-      if (!createValidAbsoluteUrl(originalUrl, "http://example.com")) {
-        throw new Error(`_triggerDownload - not a valid URL: ${originalUrl}`);
-      }
-      blobUrl = originalUrl + "#pdfjs.action=download";
+      downloadUrl.hash = "pdfjs.action=download";
     }
     const a = document.createElement("a");
-    a.href = blobUrl;
+    a.href = downloadUrl.href;
     a.target = "_parent";
     if ("download" in a) {
       a.download = filename;
