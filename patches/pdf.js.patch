@@ -1,22 +1,43 @@
 diff --git a/web/viewer.html b/web/viewer.html
 --- a/web/viewer.html
 +++ b/web/viewer.html
-@@ -27,11 +27,6 @@ See https://github.com/adobe-type-tools/cmap-resources
+@@ -26,11 +26,6 @@
+     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
      <meta name="google" content="notranslate" />
      <title>PDF.js viewer</title>
- 
+-
 -  <meta
 -      http-equiv="Content-Security-Policy"
 -      content="default-src 'none'; script-src 'self' 'wasm-unsafe-eval'; worker-src 'self' blob:; style-src 'self'; img-src 'self' blob: data:; media-src blob:; font-src 'self' data:; connect-src * blob: data:; base-uri 'none'; form-action 'none';"
 -    />
--
+ 
  <!-- This snippet is used in production (included from viewer.html) -->
  <link rel="resource" type="application/l10n" href="locale/locale.json" />
- <script src="../build/pdf.mjs" type="module"></script>
 diff --git a/web/viewer.mjs b/web/viewer.mjs
 --- a/web/viewer.mjs
 +++ b/web/viewer.mjs
-@@ -24091,7 +24091,9 @@ const PDFViewerApplication = {
+@@ -10463,14 +10463,15 @@
+ 
+ class DownloadManager extends BaseDownloadManager {
+   _triggerDownload(blobUrl, originalUrl, filename, isAttachment = false) {
++    const downloadUrl = new URL(blobUrl || originalUrl, document.baseURI);
++    if (downloadUrl.protocol !== "https:" && downloadUrl.protocol !== "http:" && downloadUrl.protocol !== "blob:") {
++      throw new Error("_triggerDownload - unsupported URL protocol");
++    }
+     if (!blobUrl && !isAttachment) {
+-      if (!createValidAbsoluteUrl(originalUrl, "http://example.com")) {
+-        throw new Error(`_triggerDownload - not a valid URL: ${originalUrl}`);
+-      }
+-      blobUrl = originalUrl + "#pdfjs.action=download";
++      downloadUrl.hash = "pdfjs.action=download";
+     }
+     const a = document.createElement("a");
+-    a.href = blobUrl;
++    a.href = downloadUrl.href;
+     a.target = "_parent";
+     if ("download" in a) {
+       a.download = filename;
+@@ -24224,7 +24225,9 @@
      const overlayManager = this.overlayManager = new OverlayManager();
      const renderingQueue = this.pdfRenderingQueue = new PDFRenderingQueue();
      renderingQueue.onIdle = this._cleanup.bind(this);
@@ -27,7 +48,7 @@ diff --git a/web/viewer.mjs b/web/viewer.mjs
        eventBus,
        externalLinkTarget: AppOptions.get("externalLinkTarget"),
        externalLinkRel: AppOptions.get("externalLinkRel"),
-@@ -26381,4 +26383,31 @@ if (document.readyState === "interactive" || document.readyState === "complete") {
+@@ -26567,4 +26570,31 @@
  
  export { PDFViewerApplication, AppConstants as PDFViewerApplicationConstants, AppOptions as PDFViewerApplicationOptions };
  

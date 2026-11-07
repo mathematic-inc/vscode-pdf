@@ -1,6 +1,7 @@
 import { strict as assert } from "node:assert";
 import { existsSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
+import { runInNewContext } from "node:vm";
 
 const root = dirname(import.meta.dirname);
 const read = (path) => readFileSync(join(root, path), "utf8");
@@ -83,3 +84,40 @@ for (const url of cssUrls) {
 }
 
 process.stdout.write(`PDF.js assets verified (${locales.length} locales).\n`);
+
+const viewer = read("assets/pdf.js/web/viewer.mjs");
+const downloadClass = viewer.slice(
+  viewer.indexOf("class DownloadManager extends BaseDownloadManager"),
+  viewer.indexOf(";// ./web/editor_undo_bar.js"),
+);
+const anchors = [];
+const DownloadManager = runInNewContext(`${downloadClass}; DownloadManager`, {
+  BaseDownloadManager: class {},
+  URL,
+  document: {
+    baseURI: "https://viewer.example.test/web/viewer.html",
+    createElement: () => ({ download: "", click() {}, remove() {} }),
+    body: { append: (anchor) => anchors.push(anchor) },
+  },
+});
+const downloads = new DownloadManager();
+for (const url of [
+  "javascript:alert(1)",
+  "JaVaScRiPt:alert(1)",
+  "data:text/html,<script>alert(1)</script>",
+  "file:///tmp/private",
+]) {
+  assert.throws(
+    () => downloads._triggerDownload(null, url, "test.pdf"),
+    /unsupported URL protocol/u,
+  );
+  assert.throws(
+    () => downloads._triggerDownload(url, url, "test.pdf", true),
+    /unsupported URL protocol/u,
+  );
+}
+assert.equal(anchors.length, 0, "Unsafe download created an anchor");
+downloads._triggerDownload(null, "../document.pdf", "document.pdf");
+assert.equal(anchors.at(-1).href, "https://viewer.example.test/document.pdf#pdfjs.action=download");
+downloads._triggerDownload("blob:https://viewer.example.test/id", "", "attachment.pdf", true);
+assert.equal(anchors.at(-1).href, "blob:https://viewer.example.test/id");
