@@ -113,7 +113,7 @@
     "@types/node": "26.6.6",
     "@types/vscode": "1.145.0",
     "@vscode/vsce": "^4.1.0",
-    "oxfmt": "^0.77.0",
+    "oxfmt": "^0.78.0",
     "oxlint": "^1.92.0",
     "tsup": "^9.0.0",
     "typescript": "^7.0.2"
