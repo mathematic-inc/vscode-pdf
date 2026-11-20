@@ -1,0 +1,11 @@
+{
+  // oxlint reads the types of the scripts in this folder from this file.
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "allowJs": true,
+    "noEmit": true,
+    "rootDir": ".",
+    "types": ["node"]
+  },
+  "include": ["*.mjs"]
+}
