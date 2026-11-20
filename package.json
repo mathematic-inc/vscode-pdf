@@ -24,11 +24,7 @@
   "main": "./dist/extension.js",
   "scripts": {
     "build": "tsup",
-    "check": "pnpm run typecheck && pnpm run check:pdfjs && oxlint --deny-warnings . && oxfmt --check .",
     "check:pdfjs": "node tools/check_pdfjs.mjs",
-    "fix": "oxlint --fix --deny-warnings . && oxfmt --write .",
-    "format": "oxfmt --write .",
-    "lint": "oxlint --deny-warnings .",
     "package": "pnpm run check:pdfjs && tsup --minify",
     "prepare": "if [ -z \"$CI\" ] && command -v hk >/dev/null 2>&1; then hk install; fi",
     "typecheck": "tsc --noEmit",
@@ -113,8 +109,6 @@
     "@types/node": "26.6.6",
     "@types/vscode": "1.145.0",
     "@vscode/vsce": "^4.1.0",
-    "oxfmt": "^0.77.0",
-    "oxlint": "^1.92.0",
     "tsup": "^9.0.0",
     "typescript": "^7.0.2"
   },
