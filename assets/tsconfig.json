@@ -1,0 +1,12 @@
+{
+  // oxlint reads the types of the webview script from this file.
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "allowJs": true,
+    "lib": ["ESNext", "DOM"],
+    "noEmit": true,
+    "rootDir": ".",
+    "types": []
+  },
+  "include": ["main.mjs", "*.d.ts"]
+}

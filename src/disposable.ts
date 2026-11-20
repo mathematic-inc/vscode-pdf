@@ -16,12 +16,9 @@
 
 import type * as vscode from "vscode";
 
-export function disposeAll(disposables: vscode.Disposable[]): void {
-  while (disposables.length > 0) {
-    const item = disposables.pop();
-    if (item) {
-      item.dispose();
-    }
+export function disposeAll(disposables: readonly vscode.Disposable[]): void {
+  for (const item of disposables.toReversed()) {
+    item.dispose();
   }
 }
 

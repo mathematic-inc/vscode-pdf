@@ -1,0 +1,81 @@
+amends
+  "package://github.com/mathematic-inc/toolconfig/releases/download/v2026.11.6/toolconfig@2026.11.6#/ToolConfig.pkl"
+
+root = true
+
+toolconfig {
+  `extends` =
+    List(new Repository {
+      git = "https://github.com/mathematic-inc/toolconfig-config.git"
+      rev = "fc76ddad46c14a7b7fe03bf117a92ede11ea0dfb"
+      path = "profiles/org/.toolconfig.pkl"
+    })
+}
+
+sections {
+  ["*"] {
+    oxfmt {
+      ignorePatterns =
+        List(
+          "**/dist/**",
+          "**/gen/**",
+          "**/generated/**",
+          "**/node_modules/**",
+          "**/target/**",
+          "**/vendor/**",
+          "**/*.md",
+          "**/*.toml",
+          "assets/pdf.js/**",
+        )
+    }
+    oxlint {
+      ignorePatterns =
+        List(
+          "**/dist/**",
+          "**/gen/**",
+          "**/generated/**",
+          "**/node_modules/**",
+          "**/target/**",
+          "**/vendor/**",
+          "assets/pdf.js/**",
+        )
+      rules {
+        ["typescript/prefer-readonly-parameter-types"] =
+          List("deny", new Mapping {
+            ["allow"] =
+              List(
+                // The extension host writes members of these VS Code classes, so the rule cannot
+                // see them as readonly.
+                new Mapping {
+                  ["from"] = "package"
+                  ["package"] = "vscode"
+                  ["name"] =
+                    List("Disposable", "ExtensionContext", "Uri", "Webview", "WebviewPanel")
+                },
+                // The browser makes these events, so the rule cannot see them as readonly.
+                new Mapping {
+                  ["from"] = "lib"
+                  ["name"] = List("ErrorEvent", "KeyboardEvent", "MessageEvent")
+                },
+              )
+          })
+      }
+    }
+    typos {
+      ["default"] { ["extend-identifiers"] { ["ba13d00"] = "ba13d00" } }
+      files {
+        ["extend-exclude"] =
+          List(
+            "**/dist/**",
+            "**/gen/**",
+            "**/generated/**",
+            "**/node_modules/**",
+            "**/target/**",
+            "**/vendor/**",
+            "CHANGELOG.md",
+            "assets/pdf.js/**",
+          )
+      }
+    }
+  }
+}

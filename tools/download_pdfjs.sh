@@ -17,15 +17,15 @@ curl -L -o pdfjs.zip "https://github.com/mozilla/pdf.js/releases/download/v${ver
 actual_hash=$(sha1sum pdfjs.zip | awk '{ print $1 }')
 
 if [ "$actual_hash" != "$expected_hash" ]; then
-	echo "Hash mismatch: expected $expected_hash, but got $actual_hash"
-	rm pdfjs.zip
-	exit 1
+  echo "Hash mismatch: expected $expected_hash, but got $actual_hash"
+  rm pdfjs.zip
+  exit 1
 fi
 
 # Unzip the file into the target directory
 if ! unzip pdfjs.zip -d assets/pdf.js; then
-	echo "Failed to unzip pdfjs.zip"
-	exit 1
+  echo "Failed to unzip pdfjs.zip"
+  exit 1
 fi
 
 # Remove the zip file after extraction

@@ -4,6 +4,7 @@ import { dirname, join } from "node:path";
 import { runInNewContext } from "node:vm";
 
 const root = dirname(import.meta.dirname);
+/** @param {string} path */
 const read = (path) => readFileSync(join(root, path), "utf8");
 
 const viewerHtml = read("assets/pdf.js/web/viewer.html");
@@ -11,8 +12,8 @@ const provider = read("src/pdf-viewer-provider.ts");
 const main = read("assets/main.mjs");
 const patch = read("patches/pdf.js.patch");
 
-assert.equal(viewerHtml.match(/Content-Security-Policy/gu)?.length ?? 0, 0);
-assert.equal(provider.match(/Content-Security-Policy/gu)?.length ?? 0, 1);
+assert.equal(viewerHtml.match(/Content-Security-Policy/gv)?.length ?? 0, 0);
+assert.equal(provider.match(/Content-Security-Policy/gv)?.length ?? 0, 1);
 for (const directive of ["'wasm-unsafe-eval'", "base-uri 'none'", "form-action 'none'"]) {
   assert.ok(provider.includes(directive), `Missing CSP directive: ${directive}`);
 }
@@ -68,16 +69,19 @@ for (const snippet of ["targetUrl.origin", "resourceRootUrl.pathname", "Uri.join
 assert.ok(!`${provider}\n${patch}`.includes("vscode-cdn"), "Found a fixed webview CDN host");
 
 const localeRoot = join(root, "assets/pdf.js/web/locale");
-const locales = Object.values(JSON.parse(read("assets/pdf.js/web/locale/locale.json")));
+/** @type {unknown} */
+const localeMap = JSON.parse(read("assets/pdf.js/web/locale/locale.json"));
+assert.ok(typeof localeMap === "object" && localeMap !== null, "locale.json is not an object");
+const locales = Object.values(localeMap);
 for (const locale of locales) {
+  assert.ok(typeof locale === "string", "locale.json holds a value that is not a string");
   assert.ok(existsSync(join(localeRoot, locale)), `Missing locale: ${locale}`);
 }
 
 const cssRoot = join(root, "assets/pdf.js/web");
 const css = read("assets/pdf.js/web/viewer.css");
-const cssUrls = [...css.matchAll(/url\((?:"|')?([^"')]+)(?:"|')?\)/gu)].map((match) => match[1]);
-for (const url of cssUrls) {
-  if (url?.startsWith("data:") || url?.startsWith("#")) {
+for (const [, url] of css.matchAll(/url\((?:"|')?([^"'\)]+)(?:"|')?\)/gv)) {
+  if (url?.startsWith("data:") === true || url?.startsWith("#") === true) {
     continue;
   }
   assert.ok(existsSync(join(cssRoot, url)), `Missing CSS asset: ${url}`);
@@ -85,21 +89,37 @@ for (const url of cssUrls) {
 
 process.stdout.write(`PDF.js assets verified (${locales.length} locales).\n`);
 
+/**
+ * @typedef {object} DownloadManagerInstance
+ * @property {(blobUrl: string | null, url: string, filename: string, isAttachment?: boolean) => void} _triggerDownload
+ */
+
+/**
+ * @param {unknown} value
+ * @returns {value is new () => DownloadManagerInstance}
+ */
+const isDownloadManager = (value) => typeof value === "function";
+
 const viewer = read("assets/pdf.js/web/viewer.mjs");
 const downloadClass = viewer.slice(
   viewer.indexOf("class DownloadManager extends BaseDownloadManager"),
   viewer.indexOf(";// ./web/editor_undo_bar.js"),
 );
+/** @type {Readonly<{ href: string }>[]} */
 const anchors = [];
+/** @param {Readonly<{ href: string }>} anchor */
+const appendAnchor = (anchor) => anchors.push(anchor);
+/** @type {unknown} */
 const DownloadManager = runInNewContext(`${downloadClass}; DownloadManager`, {
   BaseDownloadManager: class {},
   URL,
   document: {
     baseURI: "https://viewer.example.test/web/viewer.html",
     createElement: () => ({ download: "", click() {}, remove() {} }),
-    body: { append: (anchor) => anchors.push(anchor) },
+    body: { append: appendAnchor },
   },
 });
+assert.ok(isDownloadManager(DownloadManager), "Missing DownloadManager class");
 const downloads = new DownloadManager();
 for (const url of [
   "javascript:alert(1)",
@@ -107,14 +127,12 @@ for (const url of [
   "data:text/html,<script>alert(1)</script>",
   "file:///tmp/private",
 ]) {
-  assert.throws(
-    () => downloads._triggerDownload(null, url, "test.pdf"),
-    /unsupported URL protocol/u,
-  );
-  assert.throws(
-    () => downloads._triggerDownload(url, url, "test.pdf", true),
-    /unsupported URL protocol/u,
-  );
+  assert.throws(() => {
+    downloads._triggerDownload(null, url, "test.pdf");
+  }, /unsupported URL protocol/v);
+  assert.throws(() => {
+    downloads._triggerDownload(url, url, "test.pdf", true);
+  }, /unsupported URL protocol/v);
 }
 assert.equal(anchors.length, 0, "Unsafe download created an anchor");
 downloads._triggerDownload(null, "../document.pdf", "document.pdf");
