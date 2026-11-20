@@ -47,7 +47,8 @@ jobs:
               (.check_runs
               | group_by([.name, .app.id])
               | map(max_by([.started_at, .id]))) as $runs
-              | ([
+              | .total_count <= 100
+              and ([
                   ["required", 15368],
                   ["CodeQL", 57789],
                   ["Analyze (actions)", 15368],
@@ -58,7 +59,6 @@ jobs:
                 ))
               and ($runs | all(.[];
                 .name == "Dependabot gate" or
-                .name == "Enable auto-merge" or
                 (.status == "completed" and .conclusion == "success")
               ))
             ' <<< "$checks" > /dev/null; then
