@@ -44,7 +44,7 @@ const viewerHtml = rawViewerHtml
   .replace(/* html */ `<script src="viewer.mjs" type="module"></script>`, "")
   .replace(/* html */ `<link rel="stylesheet" href="viewer.css" />`, "");
 
-const resourcePathRegex = /\/[^/]+?\.\w+$/u;
+const resourcePathRegex = /\/[^\/]+?\.\w+$/v;
 
 function withTrailingSlash(uri: Uri): string {
   const value = uri.toString();
@@ -82,22 +82,25 @@ export class PDFViewerProvider implements CustomReadonlyEditorProvider {
       document.onDidChange((e) => {
         // Update all webviews when the document changes
         for (const webviewPanel of this.webviews.get(e)) {
+          // oxlint-disable-next-line unicorn/require-post-message-target-origin -- Webview.postMessage of VS Code has no targetOrigin parameter.
           webviewPanel.webview.postMessage({ action: "reload" });
         }
       }),
     );
 
-    document.onDidDelete(() => disposeAll(listeners));
+    document.onDidDelete(() => {
+      disposeAll(listeners);
+    });
 
     return document;
   }
 
   private UriResolver(webview: Webview) {
-    return (...paths: string[]): Uri =>
+    return (...paths: readonly string[]): Uri =>
       webview.asWebviewUri(Uri.file(join(this.extensionRoot.path, ...paths)));
   }
 
-  resolveCustomEditor(document: PDFDocument, webviewPanel: WebviewPanel): void {
+  resolveCustomEditor(document: Readonly<PDFDocument>, webviewPanel: WebviewPanel): void {
     // Add the webview to our internal set of active webviews
     this.webviews.add(document.uri, webviewPanel);
 
@@ -151,21 +154,26 @@ export class PDFViewerProvider implements CustomReadonlyEditorProvider {
     });
   }
 
-  private getHtmlForWebview(document: PDFDocument, webview: Webview, resourceRoot: Uri): string {
+  private getHtmlForWebview(
+    document: Readonly<PDFDocument>,
+    webview: Webview,
+    resourceRoot: Uri,
+  ): string {
     const resolveUri = this.UriResolver(webview);
-    const resolveAssetURI = (...paths: string[]) => resolveUri("assets", ...paths);
-    const resolvePdfJsURI = (...paths: string[]) => resolveUri("assets", "pdf.js", ...paths);
+    const resolveAssetURI = (...paths: readonly string[]) => resolveUri("assets", ...paths);
+    const resolvePdfJsURI = (...paths: readonly string[]) =>
+      resolveUri("assets", "pdf.js", ...paths);
 
     const cspSource = webview.cspSource;
 
     const config = workspace.getConfiguration("pdf", document.uri);
     const settings = {
-      url: `${webview.asWebviewUri(document.uri)}`,
-      docBaseUrl: `${webview.asWebviewUri(document.uri)}`,
+      url: webview.asWebviewUri(document.uri).toString(),
+      docBaseUrl: webview.asWebviewUri(document.uri).toString(),
       resourceRoot: withTrailingSlash(webview.asWebviewUri(resourceRoot)),
       defaultZoomValue: config.get<string>("defaultZoomValue", "auto"),
       sidebarViewOnLoad: config.get<number>("sidebarViewOnLoad", 0),
-      sandboxBundleSrc: `${resolvePdfJsURI("build", "pdf.sandbox.mjs")}`,
+      sandboxBundleSrc: resolvePdfJsURI("build", "pdf.sandbox.mjs").toString(),
       cMapUrl: withTrailingSlash(resolvePdfJsURI("web", "cmaps")),
       iccUrl: withTrailingSlash(resolvePdfJsURI("web", "iccs")),
       standardFontDataUrl: withTrailingSlash(resolvePdfJsURI("web", "standard_fonts")),
@@ -183,17 +191,13 @@ export class PDFViewerProvider implements CustomReadonlyEditorProvider {
 
 <title>PDF.js viewer</title>
 
-<link rel="stylesheet" href="${resolvePdfJsURI("web", "viewer.css")}">
-<link rel="stylesheet" href="${resolveAssetURI("main.css")}">
+<link rel="stylesheet" href="${resolvePdfJsURI("web", "viewer.css").toString()}">
+<link rel="stylesheet" href="${resolveAssetURI("main.css").toString()}">
 
-<script src="${resolvePdfJsURI("build", "pdf.mjs")}" type="module"></script>
-<script src="${resolveAssetURI("main.mjs")}" type="module"></script>
+<script src="${resolvePdfJsURI("build", "pdf.mjs").toString()}" type="module"></script>
+<script src="${resolveAssetURI("main.mjs").toString()}" type="module"></script>
 
-<link rel="resource" type="application/l10n" href="${resolvePdfJsURI(
-          "web",
-          "locale",
-          "locale.json",
-        )}">`,
+<link rel="resource" type="application/l10n" href="${resolvePdfJsURI("web", "locale", "locale.json").toString()}">`,
       )
       .trim();
   }

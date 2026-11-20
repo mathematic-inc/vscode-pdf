@@ -19,7 +19,7 @@ import { type CustomDocument, EventEmitter, type Uri, workspace } from "vscode";
 import { Disposable } from "./disposable";
 
 function areUriEqual(l: Uri, r: Uri) {
-  return `${l}` === `${r}`;
+  return l.toString() === r.toString();
 }
 
 /**

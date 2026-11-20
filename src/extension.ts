@@ -19,7 +19,7 @@ import { env, type ExtensionContext, Uri, window } from "vscode";
 import { PDFViewerProvider } from "./pdf-viewer-provider";
 
 export function activate(context: ExtensionContext): void {
-  if (!context.globalState.get<boolean>("supportPromptShown")) {
+  if (context.globalState.get<boolean>("supportPromptShown") !== true) {
     void context.globalState.update("supportPromptShown", true);
     void window
       .showInformationMessage(

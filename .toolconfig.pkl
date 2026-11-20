@@ -40,6 +40,28 @@ sections {
           "**/vendor/**",
           "assets/pdf.js/**",
         )
+      rules {
+        ["typescript/prefer-readonly-parameter-types"] =
+          List("deny", new Mapping {
+            ["allow"] =
+              List(
+                // The rule does not see the classes of the VS Code API as readonly. They have
+                // methods and members that the extension host writes.
+                new Mapping {
+                  ["from"] = "package"
+                  ["package"] = "vscode"
+                  ["name"] =
+                    List("Disposable", "ExtensionContext", "Uri", "Webview", "WebviewPanel")
+                },
+                // The rule does not see the DOM events that the webview gives to a listener as
+                // readonly. The browser makes these objects.
+                new Mapping {
+                  ["from"] = "lib"
+                  ["name"] = List("ErrorEvent", "KeyboardEvent", "MessageEvent")
+                },
+              )
+          })
+      }
     }
     typos {
       ["default"] { ["extend-identifiers"] { ["ba13d00"] = "ba13d00" } }
