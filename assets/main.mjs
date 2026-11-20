@@ -16,10 +16,44 @@
 
 import { PDFViewerApplicationOptions } from "./pdf.js/web/viewer.mjs";
 
+const stringOptions = [
+  "url",
+  "sandboxBundleSrc",
+  "cMapUrl",
+  "iccUrl",
+  "standardFontDataUrl",
+  "wasmUrl",
+  "imageResourcesPath",
+];
+
+/**
+ * @param {unknown} value
+ * @returns {value is ViewerConfig}
+ */
+function isViewerConfig(value) {
+  if (typeof value !== "object" || value === null) {
+    return false;
+  }
+  /** @type {unknown} */
+  const zoom = Reflect.get(value, "defaultZoomValue");
+  /** @type {unknown} */
+  const sidebar = Reflect.get(value, "sidebarViewOnLoad");
+  return (
+    stringOptions.every((option) => typeof Reflect.get(value, option) === "string") &&
+    (zoom === undefined || typeof zoom === "string") &&
+    (sidebar === undefined || typeof sidebar === "number")
+  );
+}
+
+/** @returns {ViewerConfig} */
 function loadConfig() {
   const elem = document.querySelector("#pdf-view-config");
-  if (elem) {
-    return JSON.parse(elem.dataset.config);
+  if (elem instanceof HTMLElement && elem.dataset.config !== undefined) {
+    /** @type {unknown} */
+    const config = JSON.parse(elem.dataset.config);
+    if (isViewerConfig(config)) {
+      return config;
+    }
   }
   throw new Error("Could not load configuration.");
 }
@@ -40,7 +74,7 @@ PDFViewerApplicationOptions.set("imageResourcesPath", config.imageResourcesPath)
 // Prevent pdf.js from intercepting Ctrl+P/Cmd+P and triggering the print dialog.
 document.addEventListener(
   "keydown",
-  (e) => {
+  (/** @type {KeyboardEvent} */ e) => {
     if ((e.ctrlKey || e.metaKey) && e.key === "p") {
       e.preventDefault();
       e.stopImmediatePropagation();
@@ -54,19 +88,25 @@ void (async () => {
   await window.PDFViewerApplication.open(config);
   await window.PDFViewerApplication.pdfViewer.pagesPromise;
   const [, hash] = config.url.split("#");
-  if (hash) {
+  if (hash !== undefined && hash.length > 0) {
     window.PDFViewerApplication.pdfLinkService.setHash(decodeURIComponent(hash));
   }
 })();
 
-window.addEventListener("message", async (event) => {
+/** @param {MessageEvent} event */
+async function handleMessage(event) {
   if (event.origin !== window.origin) {
     return;
   }
 
   await window.PDFViewerApplication.initializedPromise;
   const currentPageNumber = window.PDFViewerApplication.pdfViewer.currentPageNumber;
-  switch (event.data.action) {
+  /** @type {unknown} */
+  const message = event.data;
+  /** @type {unknown} */
+  const action =
+    typeof message === "object" && message !== null ? Reflect.get(message, "action") : undefined;
+  switch (action) {
     case "reload":
       await window.PDFViewerApplication.open(config);
       await window.PDFViewerApplication.pdfViewer.pagesPromise;
@@ -76,6 +116,10 @@ window.addEventListener("message", async (event) => {
       );
       break;
   }
+}
+
+window.addEventListener("message", (event) => {
+  void handleMessage(event);
 });
 
 window.addEventListener("error", (error) => {

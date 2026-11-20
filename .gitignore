@@ -67,6 +67,8 @@ web_modules/
 *.d.*ts
 # Source maps of the vendored PDF.js build
 !/assets/pdf.js/**/*.map
+# Types of the globals of the webview script
+!/assets/*.d.ts
 
 # Yarn Integrity file
 .yarn-integrity
