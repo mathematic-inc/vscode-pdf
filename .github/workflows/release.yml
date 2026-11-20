@@ -18,21 +18,21 @@ concurrency:
 permissions: {}
 
 jobs:
-  build-artifacts:
+  build-extension:
     if: github.event_name != 'workflow_dispatch'
-    name: Build
+    name: Build extension
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
       contents: read
     steps:
-      - name: Checkout
+      - name: Check out repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - name: Set up pnpm
+      - name: Install pnpm
         uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
-      - name: Set up Node.js
+      - name: Install Node.js
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version-file: .node-version
@@ -41,16 +41,16 @@ jobs:
         run: pnpm install --frozen-lockfile
       - name: Package extension
         run: pnpm exec vsce package --no-dependencies
-      - name: Upload artifact archive
+      - name: Upload build artifact
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: build-artifact
           path: "*.vsix"
 
-  release-assets:
-    name: Assemble Release Assets
+  assemble-release-assets:
+    name: Assemble release assets
     needs:
-      - build-artifacts
+      - build-extension
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -59,16 +59,16 @@ jobs:
         with:
           name: build-artifact
           path: dist
-      - name: Upload complete release assets
+      - name: Upload release assets
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: release-assets
           path: dist/*
 
-  create-release:
-    name: Publish GitHub Release
+  create-github-release:
+    name: Create GitHub release
     needs:
-      - release-assets
+      - assemble-release-assets
     runs-on: ubuntu-latest
     timeout-minutes: 15
     environment: release
@@ -76,7 +76,7 @@ jobs:
       contents: write
       id-token: write
     steps:
-      - name: Checkout
+      - name: Check out repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
@@ -112,18 +112,18 @@ jobs:
           gh workflow run release-notes.yml \
             --field tag="$RELEASE_TAG"
 
-  publish-vscode:
-    if: ${{ !cancelled() && (github.event_name == 'workflow_dispatch' || needs.create-release.result == 'success') }}
-    name: Publish VSCode Extension
+  publish-vs-code-extension:
+    if: ${{ !cancelled() && (github.event_name == 'workflow_dispatch' || needs.create-github-release.result == 'success') }}
+    name: Publish VS Code extension
     needs:
-      - create-release
+      - create-github-release
     runs-on: ubuntu-latest
     timeout-minutes: 15
     environment: release
     permissions:
       contents: read
     steps:
-      - name: Set up Node.js
+      - name: Install Node.js
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: "24"
