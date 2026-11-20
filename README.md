@@ -10,7 +10,10 @@ This extension runs the latest `pdf.js` underneath. Try the [PDF.js demo viewer]
 
 ## Why?
 
-Most extensions currently in the marketplace have problems too deep to fix. These problems include memory leaks, outdated dependencies, and several debouncing issues. A priori, this extension does not have these issues and seeks to provide only viewing capabilities. Nothing more.
+Most extensions currently in the marketplace have problems too deep to fix.
+These problems include memory leaks, outdated dependencies, and several
+debouncing issues. A priori, this extension does not have these issues and seeks
+to provide only viewing capabilities. Nothing more.
 
 ## Installation
 
@@ -18,11 +21,14 @@ Install from the [Visual Studio Marketplace](https://marketplace.visualstudio.co
 
 The current PDF.js viewer requires VS Code 1.95 or later.
 
-Alternatively, search for **"PDF Viewer"** in the Extensions view (`Ctrl+Shift+X` / `Cmd+Shift+X`) inside VS Code.
+Alternatively, search for **"PDF Viewer"** in the Extensions view
+(`Ctrl+Shift+X` / `Cmd+Shift+X`) inside VS Code.
 
 ## Usage
 
-Once installed, open any `.pdf` file in VS Code. The extension automatically registers as the default editor for PDF files and renders them using the built-in PDF.js viewer.
+Once installed, open any `.pdf` file in VS Code. The extension automatically
+registers as the default editor for PDF files and renders them using the
+built-in PDF.js viewer.
 
 ## Contributing
 
@@ -38,20 +44,34 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for the full policy.
 
 ## Support us
 
-If you find this extension helpful, please consider [supporting its development through GitHub Sponsors](https://github.com/sponsors/mathematic-inc). Your support helps maintain and improve this extension.
+If you find this extension helpful, please consider [supporting its development
+through GitHub Sponsors](https://github.com/sponsors/mathematic-inc). Your
+support helps maintain and improve this extension.
 
 ## Updating PDF.js
 
 - update `pdfjs_version.txt` to target version and hash
-- from root folder of this repo run `tools/prepare_pdfjs.sh`, this will download PDF.js in given version and try to apply patches from the `patches` folder to it
+- from root folder of this repo run `tools/prepare_pdfjs.sh`, this will download
+  PDF.js in given version and try to apply patches from the `patches` folder to
+  it
   - if the patches apply cleanly the command terminates and you are done
-  - if the patches fail to apply, for every conflict a `*.rej` file will be generated in the `assets/pdf.js` folder,
-    you need to resolve these manually and then delete the `.rej` files
+  - if the patches fail to apply, for every conflict a `*.rej` file will be
+    generated in the `assets/pdf.js` folder, you need to resolve these manually
+    and then delete the `.rej` files
 
-To keep the current PDF.js version and add patches, run with the `--update-patches` flag. The script stops after applying the current patches so you can modify `assets/pdf.js`. When you finish, it creates a new patch from your changes.
+To keep the current PDF.js version and add patches, run with the
+`--update-patches` flag. The script stops after applying the current patches so
+you can modify `assets/pdf.js`. When you finish, it creates a new patch from
+your changes.
 
-After you prepared your patches you can run the same command again, the second time the patches should apply cleanly and the `assets/pdf.js` should have the updated content you created earlier.
+After you prepared your patches you can run the same command again, the second
+time the patches should apply cleanly and the `assets/pdf.js` should have the
+updated content you created earlier.
 
-The `prepare_pdfjs.sh` script does not create any commits in this repo, after you are happy with the patches you prepared be sure to commit everything manually.
+The `prepare_pdfjs.sh` script does not create any commits in this repo, after
+you are happy with the patches you prepared be sure to commit everything
+manually.
 
-> This project is free and open-source work by a 501(c)(3) non-profit. If you find it useful, please consider [donating](https://github.com/sponsors/mathematic-inc).
+> This project is free and open-source work by a 501(c)(3) non-profit. If you
+> find it useful, please consider
+> [donating](https://github.com/sponsors/mathematic-inc).
