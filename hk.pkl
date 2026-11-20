@@ -1,6 +1,6 @@
 amends ".hk/org.pkl"
 
-// assets/pdf.js is the vendored PDF.js build, and patches/pdf.js.patch is a diff of it.
+// assets/pdf.js is vendored, and patches/pdf.js.patch is a diff of it.
 exclude = super.exclude + List("assets/pdf.js/**", "patches/*.patch")
 
 steps {

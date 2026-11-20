@@ -14,7 +14,6 @@ toolconfig {
 
 sections {
   ["*"] {
-    // assets/pdf.js is the vendored PDF.js build.
     oxfmt {
       ignorePatterns =
         List(
@@ -45,16 +44,15 @@ sections {
           List("deny", new Mapping {
             ["allow"] =
               List(
-                // The rule does not see the classes of the VS Code API as readonly. They have
-                // methods and members that the extension host writes.
+                // The extension host writes members of these VS Code classes, so the rule cannot
+                // see them as readonly.
                 new Mapping {
                   ["from"] = "package"
                   ["package"] = "vscode"
                   ["name"] =
                     List("Disposable", "ExtensionContext", "Uri", "Webview", "WebviewPanel")
                 },
-                // The rule does not see the DOM events that the webview gives to a listener as
-                // readonly. The browser makes these objects.
+                // The browser makes these events, so the rule cannot see them as readonly.
                 new Mapping {
                   ["from"] = "lib"
                   ["name"] = List("ErrorEvent", "KeyboardEvent", "MessageEvent")

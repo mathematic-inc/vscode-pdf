@@ -1,5 +1,5 @@
-// The PDF.js viewer script sets `window.PDFViewerApplication`. This file holds the parts that
-// main.mjs uses. The provider in src/pdf-viewer-provider.ts writes the configuration.
+// Only the parts of the PDF.js viewer that main.mjs uses. src/pdf-viewer-provider.ts writes
+// ViewerConfig.
 
 interface ViewerConfig {
   readonly url: string;
