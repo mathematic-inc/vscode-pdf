@@ -4,15 +4,15 @@ on:
   push:
     branches: [main]
 
-permissions:
-  contents: read
-
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: false
 
+permissions: {}
+
 jobs:
   release-please:
+    name: Release Please
     environment: release
     permissions:
       contents: write
